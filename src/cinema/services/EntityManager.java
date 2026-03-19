@@ -87,6 +87,24 @@ public abstract class EntityManager<T> { // T is a placeholder for any Type
 		}
 	}
 	
+	public String generateNextID() {
+		List<T> all = getAll();
+		int maxID = 0;
+		for (T item : all) {
+			try {
+				String idString = getEntityID(item);
+				int idNum = Integer.parseInt(idString);
+				if (idNum > maxID) {
+					maxID = idNum;
+				}
+			} catch (NumberFormatException e) {
+				System.err.println("Skipping");
+			}
+		}
+		
+		return String.format("%03d", maxID + 1);
+	}
+	
 	
 	
 }

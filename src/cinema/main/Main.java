@@ -9,18 +9,15 @@ import cinema.ui.*;
  */
 public class Main {
     public static void main(String[] args) {
-        DummyData.generateMovieDummyData(); DummyData.generateUserDummyData();
+        DummyData.generateMovieDummyData(); 
+		DummyData.generateUserDummyData(); 
+		DummyData.generateShowtimeDummyData();
 		
-		try { // TS AI NGL
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
+		try {
+			com.formdev.flatlaf.FlatLightLaf.setup();
+		} catch (Exception ex) {
+			System.err.println("Failed to init FlatLaf" + ex);
+		}
 		
 		java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

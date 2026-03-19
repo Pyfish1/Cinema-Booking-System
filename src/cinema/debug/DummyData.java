@@ -1,9 +1,12 @@
 package cinema.debug;
 
+import cinema.models.Showtime;
 import cinema.services.DataHandler;
 import java.io.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -13,6 +16,9 @@ public class DummyData {
 	private static final String DATA_DIR = "data";
 	private static final String USER_FILE = DATA_DIR  + "/users.txt";
 	private static final String MOVIE_FILE = DATA_DIR + "/movies.txt";
+	private static final String SHOWTIMES_FILE = DATA_DIR + "/showtimes.txt";
+	
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm");
 	
 	public static void ensureDirectoryExists() {
 		File directory = new File(DATA_DIR);
@@ -44,25 +50,69 @@ public class DummyData {
         System.out.println("Generating Dummy Data for movies.txt");
         List<String> movies = new ArrayList<>();
 		
-		movies.add("001,Dune: Part Two,Sci-Fi,166,8.8,SHOWING,assets/posters/dune2.jpg");
-		movies.add("002,The Dark Knight,Action,152,9.0,ARCHIVED,assets/posters/tdk.jpg");
-		movies.add("003,Inside Out 2,Animation,96,7.9,SHOWING,assets/posters/insideout2.jpg");
-		movies.add("004,Interstellar,Sci-Fi,169,8.7,ARCHIVED,assets/posters/interstellar.jpg");
-		movies.add("005,Deadpool & Wolverine,Action,127,8.1,SHOWING,assets/posters/deadpool.jpg");
-		movies.add("006,The Menu,Thriller,107,7.2,ARCHIVED,assets/posters/menu.jpg");
-		movies.add("007,Beyond the Horizon,Adventure,135,0.0,UPCOMING,assets/posters/beyond.jpg");
-		movies.add("008,Spirited Away,Fantasy,125,8.6,ARCHIVED,assets/posters/spirited.jpg");
-		movies.add("009,A Quiet Place: Day One,Horror,99,6.8,SHOWING,assets/posters/quietplace.jpg");
-		movies.add("010,Gladiator II,Action,150,0.0,UPCOMING,assets/posters/gladiator2.jpg");
-		movies.add("011,Everything Everywhere All At Once,Sci-Fi,139,7.8,ARCHIVED,assets/posters/eeaaow.jpg");
-		movies.add("012,The Grand Budapest Hotel,Comedy,99,8.1,ARCHIVED,assets/posters/grandbudapest.jpg");
-		movies.add("013,Oppenheimer,Biography,180,8.4,SHOWING,assets/posters/oppenheimer.jpg");
-		movies.add("014,Mufasa: The Lion King,Animation,120,0.0,UPCOMING,assets/posters/mufasa.jpg");
-		movies.add("015,Parasite,Thriller,132,8.5,ARCHIVED,assets/posters/parasite.jpg");
+		movies.add("001,Dune: Part Two,Sci-Fi,166,8.8,SHOWING,data/assets/posters/dune2.jpg");
+		movies.add("002,The Dark Knight,Action,152,9.0,SHOWING,data/assets/posters/tdk.jpg");
+		movies.add("003,Inside Out 2,Animation,96,7.9,SHOWING,data/assets/posters/insideout2.jpg");
+		movies.add("004,Interstellar,Sci-Fi,169,8.7,SHOWING,data/assets/posters/interstellar.jpg");
+		movies.add("005,Deadpool & Wolverine,Action,127,8.1,SHOWING,data/assets/posters/deadpool.jpg");
+		movies.add("006,The Menu,Thriller,107,7.2,ARCHIVED,data/assets/posters/menu.jpg");
+		movies.add("007,Beyond the Horizon,Adventure,135,0.0,UPCOMING,data/assets/posters/beyond.jpg");
+		movies.add("008,Spirited Away,Fantasy,125,8.6,SHOWING,data/assets/posters/spirited.jpg");
+		movies.add("009,A Quiet Place: Day One,Horror,99,6.8,SHOWING,data/assets/posters/quietplace.jpg");
+		movies.add("010,Gladiator II,Action,150,0.0,SHOWING,data/assets/posters/gladiator2.jpg");
+		movies.add("011,Everything Everywhere All At Once,Sci-Fi,139,7.8,SHOWING,data/assets/posters/eeaaow.jpg");
+		movies.add("012,The Grand Budapest Hotel,Comedy,99,8.1,SHOWING,data/assets/posters/grandbudapest.jpg");
+		movies.add("013,Oppenheimer,Biography,180,8.4,SHOWING,data/assets/posters/oppenheimer.jpg");
+		movies.add("014,Mufasa: The Lion King,Animation,120,0.0,SHOWING,data/assets/posters/mufasa.jpg");
+		movies.add("015,Parasite,Thriller,132,8.5,SHOWING,data/assets/posters/parasite.jpg");
         
         DataHandler.saveToFile(MOVIE_FILE, movies);
 
 	}
+	
+	public static void generateShowtimeDummyData() {
+        ensureDirectoryExists();
+        System.out.println("Generating Bulk Dummy Data for showtimes.txt (5x10 grid)...");
+        
+        List<String> showtimeStrings = new ArrayList<>();
+        Random rand = new Random();
+        
+        // List of Movie IDs that are "SHOWING" based on your generateMovieDummyData
+        String[] showingMovieIDs = {"001", "002", "003", "004", "005", "008", "009", "010", "011", "012", "013", "014", "015"};
+        String[] times = {"10:00", "13:00", "16:00", "19:00", "22:00"};
+        
+        int idCounter = 1;
+
+        for (String movieID : showingMovieIDs) {
+            for (int i = 0; i < times.length; i++) {
+                // Generate ID like 001, 002...
+                String sID = String.format("%03d", idCounter++);
+                int hall = (idCounter % 10) + 1; // Rotate between halls 1-10
+                
+                // Create date for today or tomorrow
+                String dateStr = "26-03-16 " + times[i]; // Matching your yy-MM-dd HH:mm
+                
+                // Create Showtime object (5 rows, 10 cols)
+                Showtime s = new Showtime(sID, movieID, hall, dateStr, 5, 10);
+                
+                // Fill at least 10 random seats
+                int seatsFilled = 0;
+                while (seatsFilled < 12) {
+                    int r = rand.nextInt(5);
+                    int c = rand.nextInt(10);
+                    if (s.getSeats()[r][c].equals("0")) {
+                        s.bookSeat(r, c);
+                        seatsFilled++;
+                    }
+                }
+                
+                showtimeStrings.add(s.toFileString());
+            }
+        }
+        
+        DataHandler.saveToFile(SHOWTIMES_FILE, showtimeStrings);
+        System.out.println("Total Showtimes Generated: " + showtimeStrings.size());
+    }
 	
 			
 }

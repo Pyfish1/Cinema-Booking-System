@@ -5,7 +5,10 @@
 package cinema.ui;
 import cinema.models.*;
 import cinema.services.MovieManager;
+import cinema.services.ShowtimeManager;
 import cinema.services.UserManager;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.event.TableModelEvent;
@@ -24,8 +27,30 @@ public class ManagerUI extends javax.swing.JFrame {
 	 */
 	public ManagerUI() {
 		initComponents();
+		setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 		loadUserTable();
 		loadMovieTable();
+		loadShowtimeTable();
+		
+		this.addWindowListener(new WindowAdapter() {
+			@Override 
+			public void windowClosing(WindowEvent e) {
+				int confirm = javax.swing.JOptionPane.showConfirmDialog(
+					null, 
+					"Are you sure you want to log out?", 
+					"Logout", 
+					javax.swing.JOptionPane.YES_NO_OPTION
+				);
+				
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					
+					LoginUI login = new LoginUI();
+					login.setLocationRelativeTo(null);
+					login.setVisible(true);
+				}
+			}
+		});
 		
 		userTable.getModel().addTableModelListener(e -> {
 			int row = e.getFirstRow();
@@ -75,6 +100,19 @@ public class ManagerUI extends javax.swing.JFrame {
 		movieTable.setModel(movieModel);
 	}
 	
+	public void loadShowtimeTable() {
+		ShowtimeManager sm = new ShowtimeManager();
+		Object[][] showtimeData = sm.get2DArray();
+		String[] showtimeHeaders = {"ShowtimeID", "MovieID", "Hall", "Date & Time", "Seats"};
+		DefaultTableModel showtimeModel = new DefaultTableModel(showtimeData, showtimeHeaders) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return column != 0;
+			}
+		};
+		showtimeTable.setModel(showtimeModel);
+	}
+	
 	private void updateUserFromTable(int row) {
 		DefaultTableModel model = (DefaultTableModel) userTable.getModel();
 		
@@ -122,6 +160,7 @@ public class ManagerUI extends javax.swing.JFrame {
 		System.out.println("Movie " + ID + " updated in text file.");
 		
 	}
+	
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
@@ -144,6 +183,9 @@ public class ManagerUI extends javax.swing.JFrame {
         addNewMovieButton = new javax.swing.JButton();
         deleteSelectedMoiveButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        showtimeTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -225,12 +267,12 @@ public class ManagerUI extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(deleteSelectedMoiveButton)
                     .addComponent(addNewMovieButton))
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Movies", jPanel2);
@@ -247,6 +289,37 @@ public class ManagerUI extends javax.swing.JFrame {
         );
 
         tabbedPane.addTab("Bookings", jPanel3);
+
+        showtimeTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane2.setViewportView(showtimeTable);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 742, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        tabbedPane.addTab("Showtimes", jPanel4);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -347,9 +420,12 @@ public class ManagerUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable movieTable;
+    private javax.swing.JTable showtimeTable;
     private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JTable userTable;
     // End of variables declaration//GEN-END:variables

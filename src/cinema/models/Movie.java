@@ -29,13 +29,14 @@ public class Movie {
 	public String getDurationString() { return String.valueOf(duration); }
 	public String getRatingString() { return String.valueOf(rating); }
 	
-	public String getStatus() { return status.toString(); }
+	public String getStatusString() { return status.toString(); }
+	public Status getStatus() { return status; }
 	
 	public int getDuration() { return duration; }
 	public double getRating() { return rating; } // Not really sure the uses of these. Just in case.
 	
 	@Override 
 	public String toString() {
-		return String.join("|", movieID, title, genre, getDurationString(), getRatingString(), getStatus(), posterPath);
+		return String.join("|", movieID, title, genre, getDurationString(), getRatingString(), getStatusString(), posterPath);
 	}
 }

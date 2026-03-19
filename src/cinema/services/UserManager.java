@@ -51,31 +51,6 @@ public class UserManager extends EntityManager<User> {
 		return false; // Email is not taken
 	}
 	
-	public String generateNextID() {
-		List<User> allUsers = getAll();
-		int maxID = 0;
-		
-		for (User user : allUsers) {
-			try {
-				String idString = user.getUserID();
-				int IDNum = Integer.parseInt(idString);
-				if (IDNum > maxID) {
-					maxID = IDNum;
-				}
-				
-			} catch (Exception e) {
-				System.out.println(e);
-				continue;
-			}
-		}
-		
-		String number = String.format("%03d", maxID + 1); 
-		System.out.println(number);
-		return number;
-	}
-	
-	
-	
 	public void registerCustomer(String name, String email, String password) {
 		String newID = generateNextID();
 		Customer newCustomer = new Customer(newID, name, email, password);

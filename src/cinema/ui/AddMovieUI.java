@@ -232,10 +232,10 @@ public class AddMovieUI extends javax.swing.JFrame {
 			
 			try {
 				String fileName = sourceFile.getName();
-				Path destPath = Paths.get("assets", "posters", fileName);
+				Path destPath = Paths.get("data", "assets", "posters", fileName);
 				Files.createDirectories(destPath.getParent());
 				Files.copy(sourceFile.toPath(), destPath, StandardCopyOption.REPLACE_EXISTING);
-				imageField.setText("assets/posters/" + fileName);
+				imageField.setText("data/assets/posters/" + fileName);
 				updatePreview(sourceFile.getAbsolutePath());
 			} catch (Exception e ){
 				JOptionPane.showMessageDialog(this, "Failed to copy image: " + e.getMessage());

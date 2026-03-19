@@ -106,6 +106,9 @@ public class LoginUI extends javax.swing.JFrame {
 			this.dispose(); // If user exists. Close the current window.
 			
 			if (user instanceof Customer) {
+				CustomerUI ui = new CustomerUI(user);
+				ui.setVisible(true);
+				ui.setLocationRelativeTo(null);
 				System.out.println("Customer UI"); // TODO Later
 			} else if (user instanceof Clerk) {
 				System.out.println("Clerk UI");

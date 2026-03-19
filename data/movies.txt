@@ -1,16 +1,15 @@
-001,Dune: Part Two,Sci-Fi,166,8.8,SHOWING,assets/posters/dune2.jpg
-002,The Dark Knight,Action,152,9.0,ARCHIVED,assets/posters/tdk.jpg
-003,Inside Out 2,Animation,96,7.9,SHOWING,assets/posters/insideout2.jpg
-004,Interstellar,Sci-Fi,169,8.7,ARCHIVED,assets/posters/interstellar.jpg
-005,Deadpool & Wolverine,Action,127,8.1,SHOWING,assets/posters/deadpool.jpg
-006,The Menu,Thriller,107,7.2,ARCHIVED,assets/posters/menu.jpg
-007,Beyond the Horizon,Adventure,135,0.0,UPCOMING,assets/posters/beyond.jpg
-008,Spirited Away,Fantasy,125,8.6,ARCHIVED,assets/posters/spirited.jpg
-009,A Quiet Place: Day One,Horror,99,6.8,SHOWING,assets/posters/quietplace.jpg
-010,Gladiator II,Action,150,0.0,UPCOMING,assets/posters/gladiator2.jpg
-011,Everything Everywhere All At Once,Sci-Fi,139,7.8,ARCHIVED,assets/posters/eeaaow.jpg
-012,The Grand Budapest Hotel,Comedy,99,8.1,ARCHIVED,assets/posters/grandbudapest.jpg
-013,Oppenheimer,Biography,180,8.4,SHOWING,assets/posters/oppenheimer.jpg
-014,Mufasa: The Lion King,Animation,120,0.0,UPCOMING,assets/posters/mufasa.jpg
-015,Parasite,Thriller,132,8.5,ARCHIVED,assets/posters/parasite.jpg
-016,Dune,Sci-Fi,100,10.0,SHOWING,assets/posters/dune.jpg
+001,Dune: Part Two,Sci-Fi,166,8.8,SHOWING,data/assets/posters/dune2.jpg
+002,The Dark Knight,Action,152,9.0,SHOWING,data/assets/posters/tdk.jpg
+003,Inside Out 2,Animation,96,7.9,SHOWING,data/assets/posters/insideout2.jpg
+004,Interstellar,Sci-Fi,169,8.7,SHOWING,data/assets/posters/interstellar.jpg
+005,Deadpool & Wolverine,Action,127,8.1,SHOWING,data/assets/posters/deadpool.jpg
+006,The Menu,Thriller,107,7.2,ARCHIVED,data/assets/posters/menu.jpg
+007,Beyond the Horizon,Adventure,135,0.0,UPCOMING,data/assets/posters/beyond.jpg
+008,Spirited Away,Fantasy,125,8.6,SHOWING,data/assets/posters/spirited.jpg
+009,A Quiet Place: Day One,Horror,99,6.8,SHOWING,data/assets/posters/quietplace.jpg
+010,Gladiator II,Action,150,0.0,SHOWING,data/assets/posters/gladiator2.jpg
+011,Everything Everywhere All At Once,Sci-Fi,139,7.8,SHOWING,data/assets/posters/eeaaow.jpg
+012,The Grand Budapest Hotel,Comedy,99,8.1,SHOWING,data/assets/posters/grandbudapest.jpg
+013,Oppenheimer,Biography,180,8.4,SHOWING,data/assets/posters/oppenheimer.jpg
+014,Mufasa: The Lion King,Animation,120,0.0,SHOWING,data/assets/posters/mufasa.jpg
+015,Parasite,Thriller,132,8.5,SHOWING,data/assets/posters/parasite.jpg

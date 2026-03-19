@@ -31,35 +31,12 @@ public class MovieManager extends EntityManager<Movie> {
 
 	@Override
 	protected String objectToString(Movie movie) {
-		return String.join(",", movie.getMovieID(), movie.getTitle(), movie.getGenre(), movie.getDurationString(), movie.getRatingString(), movie.getStatus(), movie.getPosterPath());
+		return String.join(",", movie.getMovieID(), movie.getTitle(), movie.getGenre(), movie.getDurationString(), movie.getRatingString(), movie.getStatusString(), movie.getPosterPath());
 	}
 
 	@Override
 	protected String getEntityID(Movie movie) {
 		return movie.getMovieID();
-	}
-		
-	
-	public String generateNextID() { // TODO : Make this method in the superclass instead of subclasses
-		List<Movie> allMovies = getAll();
-		int maxID = 0;
-		
-		for (Movie movie : allMovies) {
-			try {
-				String idString = movie.getMovieID();
-				int IDNum = Integer.parseInt(idString);
-				if (IDNum > maxID) {
-					maxID = IDNum;
-				}
-			} catch (Exception e) {
-				System.out.println(e);
-				continue; 
-			}
-		}
-		
-		String number = String.format("%03d", maxID + 1); 
-		System.out.println(number);
-		return number;
 	}
 	
 	
