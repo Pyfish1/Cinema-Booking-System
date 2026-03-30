@@ -6,10 +6,7 @@ package cinema.ui;
 
 import cinema.models.Movie;
 import cinema.models.Showtime;
-import cinema.models.Status;
 import cinema.models.User;
-import cinema.services.MovieManager;
-import cinema.services.ShowtimeManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -88,11 +85,10 @@ public class CustomerUI extends javax.swing.JFrame {
 	
 	private void displayMovies(String query) {
 		movieGallery.removeAll();
-		MovieManager mm = new MovieManager();
-		List<Movie> allMovies = mm.getAll();
+		List<Movie> allMovies = Movie.getAll();
 		
 		for (Movie m : allMovies) {
-			if (m.getTitle().toLowerCase().contains(query.toLowerCase()) && m.getStatus() == Status.SHOWING) {
+			if (m.getTitle().toLowerCase().contains(query.toLowerCase()) && m.getStatus() == Movie.Status.SHOWING) {
 				movieGallery.add(createMovieCard(m));
 			}
 		}
@@ -142,8 +138,7 @@ public class CustomerUI extends javax.swing.JFrame {
 	}
 	
 	private void openBookingForMovie(Movie selectedMovie) {
-		ShowtimeManager sm = new ShowtimeManager();
-		List<Showtime> allShowtimes = sm.getAll();
+		List<Showtime> allShowtimes = Showtime.getAll();
 		
 		List<Showtime> movieShowtimes = new ArrayList<>();
 		for (Showtime st : allShowtimes) {

@@ -101,18 +101,20 @@ public class LoginUI extends javax.swing.JFrame {
 			return;
 		}
 		
-		User user = AuthService.authenticate(email, password);
+		User user = User.authenticate(email, password);
 		if (user != null) {
 			this.dispose(); // If user exists. Close the current window.
 			
-			if (user instanceof Customer) {
+			if (user.getRole() == User.Role.CUSTOMER) {
 				CustomerUI ui = new CustomerUI(user);
 				ui.setVisible(true);
 				ui.setLocationRelativeTo(null);
-				System.out.println("Customer UI"); // TODO Later
-			} else if (user instanceof Clerk) {
+				System.out.println("Customer UI"); 
+				
+			} else if (user.getRole() == User.Role.CLERK) {
 				System.out.println("Clerk UI");
-			} else if (user instanceof Manager) {
+				
+			} else if (user.getRole() == User.Role.MANAGER) {
 				ManagerUI ui = new ManagerUI();
 				ui.setVisible(true);
 				ui.setLocationRelativeTo(null);

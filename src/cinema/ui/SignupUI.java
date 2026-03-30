@@ -125,12 +125,11 @@ public class SignupUI extends javax.swing.JFrame {
 			return;
 		}
 		
-		UserManager userManager = new UserManager();
 		
-		if (userManager.isEmailTaken(email)) {
+		if (User.isEmailTaken(email)) {
 			JOptionPane.showMessageDialog(this, "This email is already registered");
 		} else {
-			userManager.registerCustomer(name, email, password);
+			User.registerCustomer(name, email, password);
 			JOptionPane.showMessageDialog(this, "Registration Successful!");
 			
 			LoginUI loginUI = new LoginUI();

@@ -4,9 +4,6 @@
  */
 package cinema.ui;
 import cinema.models.*;
-import cinema.services.MovieManager;
-import cinema.services.ShowtimeManager;
-import cinema.services.UserManager;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
@@ -75,8 +72,7 @@ public class ManagerUI extends javax.swing.JFrame {
 	}
 	
 	public void loadUserTable() {
-		UserManager um = new UserManager();
-		Object[][] userData = um.get2DArray();
+		Object[][] userData = User.get2DArray();
 		String[] userHeaders = {"ID", "Name", "Email", "Password", "Role"};
  		DefaultTableModel userModel = new DefaultTableModel(userData, userHeaders) {
 			@Override
@@ -88,8 +84,7 @@ public class ManagerUI extends javax.swing.JFrame {
 	}
 	
 	public void loadMovieTable() {
-		MovieManager mm = new MovieManager();
-		Object[][] movieData = mm.get2DArray();
+		Object[][] movieData = Movie.get2DArray();
 		String[] movieHeaders = {"ID", "Title", "Genre", "Duration ( Minutes )", "Rating", "Status", "Poster Path"};
 		DefaultTableModel movieModel = new DefaultTableModel(movieData, movieHeaders) {
 			@Override
@@ -101,8 +96,7 @@ public class ManagerUI extends javax.swing.JFrame {
 	}
 	
 	public void loadShowtimeTable() {
-		ShowtimeManager sm = new ShowtimeManager();
-		Object[][] showtimeData = sm.get2DArray();
+		Object[][] showtimeData = Showtime.get2DArray();
 		String[] showtimeHeaders = {"ShowtimeID", "MovieID", "Hall", "Date & Time", "Seats"};
 		DefaultTableModel showtimeModel = new DefaultTableModel(showtimeData, showtimeHeaders) {
 			@Override
@@ -122,20 +116,10 @@ public class ManagerUI extends javax.swing.JFrame {
 		String PASSWORD = model.getValueAt(row, 3).toString();
 		String ROLESTR = model.getValueAt(row, 4).toString(); // TODO : Add validation here.
 
-		Role ROLE = Role.valueOf(ROLESTR.toUpperCase());
+		User.Role ROLE = User.Role.valueOf(ROLESTR.toUpperCase());
 		
-		User updatedUser;
-		
-		if (ROLE == Role.CUSTOMER) {
-			updatedUser = new Customer(ID, NAME, EMAIL, PASSWORD);
-		} else if (ROLE == Role.CLERK) {
-			updatedUser = new Clerk(ID, NAME, EMAIL, PASSWORD);
-		} else {
-			updatedUser = new Manager(ID, NAME, EMAIL, PASSWORD);
-		}
-		
-		UserManager um = new UserManager();
-		um.update(ID, updatedUser);
+		User updatedUser = User.create(ID, NAME, EMAIL, PASSWORD, ROLE);	
+		User.update(ID, updatedUser);
 		
 		System.out.println("User " + ID + " updated in text file.");
 	}
@@ -148,14 +132,13 @@ public class ManagerUI extends javax.swing.JFrame {
 		String GENRE = model.getValueAt(row, 2).toString();
 		int DURATION = Integer.parseInt(model.getValueAt(row, 3).toString()); // autistic code my god - Ivan
 		double RATING = Double.parseDouble(model.getValueAt(row, 4).toString()); // TODO : DEFINITELY ADD VALIDATION HERE. FUTURE IVAN PLS FIX
-		Status STATUS = Status.valueOf(model.getValueAt(row, 5).toString());
+		Movie.Status STATUS = Movie.Status.valueOf(model.getValueAt(row, 5).toString());
 		
 		
 		String POSTERPATH = model.getValueAt(row, 6).toString();
 		
-		MovieManager mm = new MovieManager();
 		Movie updatedMovie = new Movie(ID, TITLE, GENRE, DURATION, RATING, STATUS, POSTERPATH);
-		mm.update(ID, updatedMovie); // Takes in ID and Movie object, replaces the corresponding ID the object.
+		Movie.update(ID, updatedMovie); // Takes in ID and Movie object, replaces the corresponding ID the object.
 		
 		System.out.println("Movie " + ID + " updated in text file.");
 		
@@ -344,7 +327,7 @@ public class ManagerUI extends javax.swing.JFrame {
 			int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
 			
 			if (confirm == JOptionPane.YES_OPTION) {
-				new MovieManager().delete(ID); // Delete from file.
+				Movie.delete(ID);
 				loadMovieTable(); // Reload list.
 			}
 		} else {
@@ -359,7 +342,7 @@ public class ManagerUI extends javax.swing.JFrame {
 			int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
 			
 			if (confirm == JOptionPane.YES_OPTION) {
-				new UserManager().delete(ID); // Delete from file.
+				User.delete(ID); // Delete from file.
 				loadUserTable(); // Reload list.
 			}
 		} else {

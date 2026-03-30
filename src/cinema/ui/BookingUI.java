@@ -4,14 +4,11 @@
  */
 package cinema.ui;
 
+import cinema.models.Booking;
 import cinema.models.Movie;
 import cinema.models.Seat;
 import cinema.models.Showtime;
-import cinema.models.Ticket;
 import cinema.models.User;
-import cinema.services.SeatManager;
-import cinema.services.ShowtimeManager;
-import cinema.services.TicketManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -55,7 +52,7 @@ public class BookingUI extends javax.swing.JFrame {
 		seatPanel.removeAll();
 		seatPanel.setLayout(new GridBagLayout());
 		JPanel innerGrid = new JPanel(new GridLayout(5, 10, 5, 5));
-		String[][] layout = SeatManager.decode(showtime.getSeatsString(), 5, 10);
+		String[][] layout = showtime.getSeats();
 		
 		for (int r = 0; r < 5; r++) {
 			for (int c = 0; c < 10; c++) {
@@ -107,25 +104,28 @@ public class BookingUI extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(this, "Please select at least 1 seat");
 			return;
 		} 
-		
+
+		StringBuilder seatLabels = new StringBuilder();
 		for (Seat s : selectedSeats) {
 			showtime.bookSeat(s.row(), s.col());
+			seatLabels.append((char)('A' + s.row())).append(s.col() + 1).append(";");
 		}
-		
-		new ShowtimeManager().update(showtime.getShowtimeID(), showtime);
-		
-		TicketManager tm = new TicketManager();
-		Ticket t = new Ticket(
-				tm.generateNextID(),
+
+		Showtime.update(showtime.getShowtimeID(), showtime);
+
+		double total = selectedSeats.size() * showtime.getPrice();
+		String bookingID = Booking.generateNextID();
+
+		Booking newBooking = new Booking(
+				bookingID,
 				customer.getUserID(),
 				showtime.getShowtimeID(),
-				selectedSeats,
-				selectedSeats.size() * PRICE_PER_SEAT
+				seatLabels.toString(),
+				total
 		);
-		
-		tm.add(t);
-		
-		JOptionPane.showMessageDialog(this, "Booking Successful \n TicketID : " + t.getTicketID());
+
+		newBooking.append();
+		JOptionPane.showMessageDialog(this, "Booking Successful!\nBooking ID: " + bookingID);
 		this.dispose();
 	}
 	

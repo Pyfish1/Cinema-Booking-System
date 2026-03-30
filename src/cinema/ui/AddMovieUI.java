@@ -5,8 +5,6 @@
 package cinema.ui;
 
 import cinema.models.Movie;
-import cinema.models.Status;
-import cinema.services.MovieManager;
 import java.awt.Image;
 import java.io.File;
 import java.nio.file.Files;
@@ -169,13 +167,12 @@ public class AddMovieUI extends javax.swing.JFrame {
 			ImageIcon icon = new ImageIcon(path);
 			Image img = icon.getImage();
 			
-			Image scaledImg = img.getScaledInstance(
-				imagePreview.getWidth(),
-				imagePreview.getHeight(),
-				Image.SCALE_SMOOTH
-			);
+			int w = imagePreview.getWidth() > 0 ? imagePreview.getWidth() : 120;
+			int h = imagePreview.getHeight() > 0 ? imagePreview.getHeight() : 150;
 			
+			Image scaledImg = img.getScaledInstance( w, h, Image.SCALE_SMOOTH);
 			imagePreview.setIcon(new ImageIcon(scaledImg));
+			imagePreview.setText("");
 			
 		} catch (Exception e) {
 			imagePreview.setText("Invalid Image");
@@ -194,7 +191,7 @@ public class AddMovieUI extends javax.swing.JFrame {
 			String genre = genreField.getText().trim();
 			int duration = Integer.parseInt(durationField.getText().trim());
 			double rating = Double.parseDouble(ratingField.getText().trim());
-			Status status = Status.valueOf(statusComboBox.getSelectedItem().toString());
+			Movie.Status status = Movie.Status.valueOf(statusComboBox.getSelectedItem().toString());
 			String imagePath = imageField.getText().trim();
 			
 			if (title.isEmpty()) { // Check all if empty
@@ -202,11 +199,10 @@ public class AddMovieUI extends javax.swing.JFrame {
 				return;
 			}
 			
-			MovieManager mm = new MovieManager();
-			String nextID = mm.generateNextID();
+			String nextID = Movie.generateNextID();
 			
 			Movie newMovie = new Movie(nextID, title, genre, duration, rating, status, imagePath);
-			mm.add(newMovie);
+			newMovie.append();
 			JOptionPane.showMessageDialog(this, "Movie added successfully");
 			if (parent != null) {
 				parent.loadMovieTable();

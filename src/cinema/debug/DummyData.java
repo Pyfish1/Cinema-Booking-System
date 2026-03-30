@@ -1,5 +1,6 @@
 package cinema.debug;
 
+import cinema.models.Entity;
 import cinema.models.Showtime;
 import cinema.services.DataHandler;
 import java.io.*;
@@ -72,46 +73,32 @@ public class DummyData {
 	
 	public static void generateShowtimeDummyData() {
         ensureDirectoryExists();
-        System.out.println("Generating Bulk Dummy Data for showtimes.txt (5x10 grid)...");
+        System.out.println("Generating Showtimes...");
         
-        List<String> showtimeStrings = new ArrayList<>();
+        List<Showtime> showtimes = new ArrayList<>();
         Random rand = new Random();
-        
-        // List of Movie IDs that are "SHOWING" based on your generateMovieDummyData
-        String[] showingMovieIDs = {"001", "002", "003", "004", "005", "008", "009", "010", "011", "012", "013", "014", "015"};
+        String[] showingMovieIDs = {"001", "002", "003"}; // Use IDs from above
         String[] times = {"10:00", "13:00", "16:00", "19:00", "22:00"};
         
         int idCounter = 1;
-
         for (String movieID : showingMovieIDs) {
-            for (int i = 0; i < times.length; i++) {
-                // Generate ID like 001, 002...
+            for (String time : times) {
                 String sID = String.format("%03d", idCounter++);
-                int hall = (idCounter % 10) + 1; // Rotate between halls 1-10
+                int hall = (idCounter % 10) + 1;
+                String dateStr = "26-03-16 " + time;
                 
-                // Create date for today or tomorrow
-                String dateStr = "26-03-16 " + times[i]; // Matching your yy-MM-dd HH:mm
+                // New constructor: Includes Price (25.0)
+                Showtime s = new Showtime(sID, movieID, hall, dateStr, 25.0);
                 
-                // Create Showtime object (5 rows, 10 cols)
-                Showtime s = new Showtime(sID, movieID, hall, dateStr, 5, 10);
-                
-                // Fill at least 10 random seats
-                int seatsFilled = 0;
-                while (seatsFilled < 12) {
-                    int r = rand.nextInt(5);
-                    int c = rand.nextInt(10);
-                    if (s.getSeats()[r][c].equals("0")) {
-                        s.bookSeat(r, c);
-                        seatsFilled++;
-                    }
+                // Randomly book 12 seats
+                for (int i = 0; i < 12; i++) {
+                    s.bookSeat(rand.nextInt(5), rand.nextInt(10));
                 }
-                
-                showtimeStrings.add(s.toFileString());
+                showtimes.add(s);
             }
         }
         
-        DataHandler.saveToFile(SHOWTIMES_FILE, showtimeStrings);
-        System.out.println("Total Showtimes Generated: " + showtimeStrings.size());
+        Entity.saveAll("data/showtimes.txt", showtimes);
     }
 	
 			

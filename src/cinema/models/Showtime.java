@@ -1,89 +1,117 @@
 package cinema.models;
 
 import java.math.BigInteger;
+import java.util.List;
 
-/**
- *
- * @author Ivan
- */
-public class Showtime {
-	private String showtimeID;
-	private String movieID;
-	private int hallNum;
-	private String dateTime;
-	private String[][] seats; 
-	
-	// Assumption : there are exactly 50 seats per hall. 10 Halls.
+public class Showtime extends Entity {
+    private String showtimeID, movieID, dateTime;
+    private int hallNum;
+    private String[][] seats; // 0 for empty, 1 for booked
+    private double price;
+    
+    private static final String FILE_PATH = "data/showtimes.txt";
+    private static final int ROWS = 5;
+    private static final int COLS = 10;
 
-	public Showtime(String showtimeID, String movieID, int hallNum, String dateTime, int rows, int cols) {
-		this.showtimeID = showtimeID;
-		this.movieID = movieID;
-		this.hallNum = hallNum;
-		this.dateTime = dateTime;
-		this.seats = new String[rows][cols];
-		
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
-				seats[i][j] = "0"; // Set all seats to be empty.
-			}
-		}
-		
+    // Constructor for NEW showtimes (All empty)
+    public Showtime(String showtimeID, String movieID, int hallNum, String dateTime, double price) {
+        super(FILE_PATH);
+        this.showtimeID = showtimeID;
+        this.movieID = movieID;
+        this.hallNum = hallNum;
+        this.dateTime = dateTime;
+        this.price = price;
+        this.seats = new String[ROWS][COLS];
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) seats[i][j] = "0";
+        }
+    }
+
+    // Constructor for LOADING from file (With Hex string)
+    public Showtime(String showtimeID, String movieID, int hallNum, String dateTime, String hexSeats, double price) {
+        super(FILE_PATH);
+        this.showtimeID = showtimeID;
+        this.movieID = movieID;
+        this.hallNum = hallNum;
+        this.dateTime = dateTime;
+        this.price = price;
+        this.seats = decodeSeats(hexSeats, ROWS, COLS);
+    }
+	
+	// Getters
+    public String getShowtimeID() { return showtimeID; }
+    public String getMovieID() { return movieID; }
+    public int getHallNum() { return hallNum; }
+    public String getDateTime() { return dateTime; }
+    public String[][] getSeats() { return seats; }
+    public double getPrice() { return price; }
+
+    // --- Hex Logic ---
+    public static String encodeSeats(String[][] seats) {
+        StringBuilder binary = new StringBuilder();
+        for (String[] row : seats) {
+            for (String seat : row) binary.append(seat.equals("1") ? "1" : "0");
+        }
+        return new BigInteger(binary.toString(), 2).toString(16).toUpperCase();
+    }
+
+    public static String[][] decodeSeats(String hex, int rows, int cols) {
+        String binary = new BigInteger(hex, 16).toString(2);
+        while (binary.length() < rows * cols) binary = "0" + binary;
+        
+        String[][] grid = new String[rows][cols];
+        int k = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) grid[i][j] = String.valueOf(binary.charAt(k++));
+        }
+        return grid;
+    }
+
+    // --- Methods ---
+    public void bookSeat(int row, int col) {
+        this.seats[row][col] = "1";
+    }
+
+    public static List<Showtime> getAll() {
+        return Entity.getAll(FILE_PATH, line -> {
+            String[] p = line.split(",");
+            return new Showtime(p[0], p[1], Integer.parseInt(p[2]), p[3], p[4], Double.parseDouble(p[5]));
+        });
+    }
+	
+	public static void update(String id, Showtime updated) {
+        Entity.update(FILE_PATH, id, updated);
+    }
+	
+	public Movie getMovie() {
+		return Movie.getAll().stream()
+				.filter(m -> m.getMovieID().equals(this.movieID))
+				.findFirst()
+				.orElse(null);
 	}
 	
-	public Showtime(String showtimeID, String movieID, int hallNum, String dateTime, String seats) {
-		this.showtimeID = showtimeID;
-		this.movieID = movieID;
-		this.hallNum = hallNum;
-		this.dateTime = dateTime;
-		this.seats = decodeSeats(seats, 5, 10);
+	public static Object[][] get2DArray() {
+		List<Showtime> all = getAll();
+
+		return Entity.create2DArray(all, 6, (s, row) -> {
+			Movie m = s.getMovie();
+
+			row[0] = s.getShowtimeID();
+			row[1] = (m != null) ? m.getTitle() : "Unknown (" + s.getMovieID() + ")";
+			row[2] = "Hall " + s.getHallNum();
+			row[3] = s.getDateTime();
+			row[4] = String.format("RM %.2f", s.getPrice());
+
+			long bookedCount = java.util.Arrays.stream(s.getSeats())
+								.flatMap(java.util.Arrays::stream)
+								.filter(seat -> seat.equals("1"))
+								.count();
+			row[5] = bookedCount + "/50";
+		});
 	}
-	
-	public String getShowtimeID() { return showtimeID; }
-	public String getMovieID() { return movieID; }
-	public int getHallNum() { return hallNum; }
-	public String getDateTime() { return dateTime; }
-	public String getSeatsString() { return encodeSeats(seats); }
-	public String[][] getSeats() { return seats; }
-	
-	public void setSeats(String hex) {
-		this.seats = decodeSeats(hex, 5, 10);
-	}
-	
-	public void bookSeat(int row, int col) {
-		this.seats[row][col] = "1";
-	}	
-	
-	public static String encodeSeats(String[][] seats) {
-		StringBuilder binary = new StringBuilder();
-		for (String[] row : seats) {
-			for (String seat : row) {
-				binary.append(seat.equals("1") ? "1" : "0");
-			}
-		}
-		BigInteger bi = new BigInteger(binary.toString(), 2);
-		return bi.toString(16).toUpperCase();
-	}
-	
-	public static String[][] decodeSeats(String hex, int rows, int cols) {
-		BigInteger bi = new BigInteger(hex, 16);
-		String binary = bi.toString(2);
-		
-		while (binary.length() < rows * cols) {
-			binary = "0" + binary;
-		}
-		
-		String[][] seats = new String[rows][cols];
-		int k = 0;
-		for (int i = 0; i < rows; i++ ) {
-			for (int j = 0; j < cols; j++) {
-				seats[i][j] = String.valueOf(binary.charAt(k++));
-			}
-		}
-		return seats;
-	}
-	
-	public String toFileString() {
-		String encodedSeats = encodeSeats(this.seats);
-		return String.join(",", showtimeID, movieID, String.valueOf(getHallNum()), dateTime, encodedSeats);
-	}
+
+    @Override
+    public String toString() {
+        return String.join(",", showtimeID, movieID, String.valueOf(hallNum), dateTime, encodeSeats(seats), String.valueOf(price));
+    }
 }
