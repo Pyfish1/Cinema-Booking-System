@@ -75,6 +75,8 @@ public class AddMovieUI extends javax.swing.JFrame {
 
         durationField.addActionListener(this::durationFieldActionPerformed);
 
+        titleField.addActionListener(this::titleFieldActionPerformed);
+
         addImagebutton.setText("Add Image");
         addImagebutton.addActionListener(this::addImagebuttonActionPerformed);
 
@@ -84,6 +86,7 @@ public class AddMovieUI extends javax.swing.JFrame {
         imageField.addActionListener(this::imageFieldActionPerformed);
 
         statusComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SHOWING", "UPCOMING", "ARCHIVED", " " }));
+        statusComboBox.addActionListener(this::statusComboBoxActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -214,7 +217,9 @@ public class AddMovieUI extends javax.swing.JFrame {
 			JOptionPane.showMessageDialog(this, "Duration must be an integer and Rating a dobule.");
 		} catch (IllegalArgumentException e) {
 			JOptionPane.showMessageDialog(this, "Status must be : SHOWING, UPCOMING or ARCHIVED"); // Not needed
-		}
+		} catch (ArrayIndexOutOfBoundsException e){
+                        JOptionPane.showMessageDialog(this, "No image detected");
+                }
     }//GEN-LAST:event_doneButtonActionPerformed
 
     private void imageFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imageFieldActionPerformed
@@ -238,6 +243,14 @@ public class AddMovieUI extends javax.swing.JFrame {
 			}
 		}
     }//GEN-LAST:event_addImagebuttonActionPerformed
+
+    private void statusComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_statusComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_statusComboBoxActionPerformed
+
+    private void titleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_titleFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_titleFieldActionPerformed
 
 	/**
 	 * @param args the command line arguments

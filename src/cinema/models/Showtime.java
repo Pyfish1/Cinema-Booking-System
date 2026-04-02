@@ -2,6 +2,7 @@ package cinema.models;
 
 import java.math.BigInteger;
 import java.util.List;
+import cinema.models.Entity;
 
 public class Showtime extends Entity {
     private String showtimeID, movieID, dateTime;
@@ -21,11 +22,10 @@ public class Showtime extends Entity {
         this.hallNum = hallNum;
         this.dateTime = dateTime;
         this.price = price;
-        this.seats = new String[ROWS][COLS];
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) seats[i][j] = "0";
+        String initialHex = cinema.services.SeatManager.getEmptyHallHex();
+        this.seats = decodeSeats(initialHex, ROWS, COLS); 
         }
-    }
+    
 
     // Constructor for LOADING from file (With Hex string)
     public Showtime(String showtimeID, String movieID, int hallNum, String dateTime, String hexSeats, double price) {
@@ -82,6 +82,9 @@ public class Showtime extends Entity {
 	public static void update(String id, Showtime updated) {
         Entity.update(FILE_PATH, id, updated);
     }
+        public static void delete(String id) {
+            Entity.delete(FILE_PATH, id, getAll(), Showtime::getShowtimeID);
+        }
 	
 	public Movie getMovie() {
 		return Movie.getAll().stream()
@@ -98,9 +101,9 @@ public class Showtime extends Entity {
 
 			row[0] = s.getShowtimeID();
 			row[1] = (m != null) ? m.getTitle() : "Unknown (" + s.getMovieID() + ")";
-			row[2] = "Hall " + s.getHallNum();
+			row[2] = s.getHallNum();
 			row[3] = s.getDateTime();
-			row[4] = String.format("RM %.2f", s.getPrice());
+			row[4] = s.getPrice();
 
 			long bookedCount = java.util.Arrays.stream(s.getSeats())
 								.flatMap(java.util.Arrays::stream)
@@ -114,4 +117,11 @@ public class Showtime extends Entity {
     public String toString() {
         return String.join(",", showtimeID, movieID, String.valueOf(hallNum), dateTime, encodeSeats(seats), String.valueOf(price));
     }
+    
+    public static String generateNextID() {
+    return String.format("%03d", getAll().stream()
+            .mapToInt(s -> Integer.parseInt(s.getShowtimeID()))
+            .max().orElse(0) + 1);
+    }
+    
 }

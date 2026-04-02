@@ -67,6 +67,7 @@ public class ManagerUI extends javax.swing.JFrame {
 			}
 		});
 		
+                
 		
 		
 	}
@@ -97,7 +98,7 @@ public class ManagerUI extends javax.swing.JFrame {
 	
 	public void loadShowtimeTable() {
 		Object[][] showtimeData = Showtime.get2DArray();
-		String[] showtimeHeaders = {"ShowtimeID", "MovieID", "Hall", "Date & Time", "Seats"};
+		String[] showtimeHeaders = {"ShowtimeID", "MovieID", "Hall", "Date & Time", "Price"};
 		DefaultTableModel showtimeModel = new DefaultTableModel(showtimeData, showtimeHeaders) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -133,8 +134,6 @@ public class ManagerUI extends javax.swing.JFrame {
 		int DURATION = Integer.parseInt(model.getValueAt(row, 3).toString()); // autistic code my god - Ivan
 		double RATING = Double.parseDouble(model.getValueAt(row, 4).toString()); // TODO : DEFINITELY ADD VALIDATION HERE. FUTURE IVAN PLS FIX
 		Movie.Status STATUS = Movie.Status.valueOf(model.getValueAt(row, 5).toString());
-		
-		
 		String POSTERPATH = model.getValueAt(row, 6).toString();
 		
 		Movie updatedMovie = new Movie(ID, TITLE, GENRE, DURATION, RATING, STATUS, POSTERPATH);
@@ -144,6 +143,22 @@ public class ManagerUI extends javax.swing.JFrame {
 		
 	}
 	
+        private void updateShowtimeFromTable(int row){
+            DefaultTableModel model = (DefaultTableModel) showtimeTable.getModel();
+            
+                String ID = model.getValueAt(row, 0).toString();
+                String MOVIEID = model.getValueAt(row, 1).toString();
+                int HALL = Integer.parseInt(model.getValueAt(row, 2).toString());
+                String DATETIME = model.getValueAt(row,3).toString();
+                String SEATS = model.getValueAt(row, 4).toString();
+                double PRICE = Double.parseDouble(model.getValueAt(row,5).toString());
+                
+                
+                Showtime updatedShowtime = new Showtime(ID, MOVIEID, HALL, DATETIME, SEATS, PRICE);
+                Showtime.update(ID, updatedShowtime);
+                
+                System.out.println("Showtime " + ID + " updated in text file.");
+        }
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
@@ -169,6 +184,8 @@ public class ManagerUI extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         showtimeTable = new javax.swing.JTable();
+        deleteSelectedShowtimeButton1 = new javax.swing.JButton();
+        addNewShowtimeButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -196,8 +213,8 @@ public class ManagerUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane1))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(512, 512, 512)
-                .addComponent(deleteSelectedUserButton, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
+                .addGap(509, 509, 509)
+                .addComponent(deleteSelectedUserButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(addNewUserButton, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -211,7 +228,7 @@ public class ManagerUI extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(deleteSelectedUserButton)
                     .addComponent(addNewUserButton))
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Users", jPanel1);
@@ -238,7 +255,7 @@ public class ManagerUI extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 742, Short.MAX_VALUE))
+                .addComponent(jScrollPane3))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(512, 512, 512)
                 .addComponent(deleteSelectedMoiveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -255,7 +272,7 @@ public class ManagerUI extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(deleteSelectedMoiveButton)
                     .addComponent(addNewMovieButton))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Movies", jPanel2);
@@ -268,7 +285,7 @@ public class ManagerUI extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
+            .addGap(0, 515, Short.MAX_VALUE)
         );
 
         tabbedPane.addTab("Bookings", jPanel3);
@@ -286,20 +303,36 @@ public class ManagerUI extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(showtimeTable);
 
+        deleteSelectedShowtimeButton1.setText("Delete Selected");
+        deleteSelectedShowtimeButton1.addActionListener(this::deleteSelectedShowtimeButton1ActionPerformed);
+
+        addNewShowtimeButton1.setText("Add New");
+        addNewShowtimeButton1.addActionListener(this::addNewShowtimeButton1ActionPerformed);
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 742, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 744, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(deleteSelectedShowtimeButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(addNewShowtimeButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(deleteSelectedShowtimeButton1)
+                    .addComponent(addNewShowtimeButton1))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
 
         tabbedPane.addTab("Showtimes", jPanel4);
@@ -350,6 +383,20 @@ public class ManagerUI extends javax.swing.JFrame {
 		}
 	}
 	
+        private void deleteShowtime() {
+                int selectedRow = showtimeTable.getSelectedRow();
+                if (selectedRow != -1) {
+                    String ID = showtimeTable.getValueAt(selectedRow,0).toString();
+                    int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+                    
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        Showtime.delete(ID);
+                        loadShowtimeTable();
+                    }
+                } else {
+                        JOptionPane.showMessageDialog(this, "Please select a showtime to delete");
+                }
+        }
 	
 	
     private void deleteSelectedMoiveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedMoiveButtonActionPerformed
@@ -369,6 +416,18 @@ public class ManagerUI extends javax.swing.JFrame {
     private void addNewUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewUserButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_addNewUserButtonActionPerformed
+
+    private void addNewShowtimeButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewShowtimeButton1ActionPerformed
+        // TODO add your handling code here:
+        AddShowtimeUI ui = new AddShowtimeUI(this);
+            ui.setVisible(true);
+            ui.setLocationRelativeTo(null);
+    }//GEN-LAST:event_addNewShowtimeButton1ActionPerformed
+
+    private void deleteSelectedShowtimeButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedShowtimeButton1ActionPerformed
+        // TODO add your handling code here:
+        deleteShowtime();
+    }//GEN-LAST:event_deleteSelectedShowtimeButton1ActionPerformed
 
 	/**
 	 * @param args the command line arguments
@@ -397,8 +456,10 @@ public class ManagerUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNewMovieButton;
+    private javax.swing.JButton addNewShowtimeButton1;
     private javax.swing.JButton addNewUserButton;
     private javax.swing.JButton deleteSelectedMoiveButton;
+    private javax.swing.JButton deleteSelectedShowtimeButton1;
     private javax.swing.JButton deleteSelectedUserButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
