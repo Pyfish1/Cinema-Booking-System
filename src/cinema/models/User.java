@@ -116,7 +116,6 @@ public abstract class User extends Entity {
 	}
 }
 
-
 // Inheritee Models
 class Manager extends User {
 	public Manager(String userID, String name, String email, String password) {

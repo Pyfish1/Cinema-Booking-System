@@ -213,7 +213,7 @@ public class AddMovieUI extends javax.swing.JFrame {
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(this, "Duration must be an integer and Rating a dobule.");
 		} catch (IllegalArgumentException e) {
-			JOptionPane.showMessageDialog(this, "Status must be : SHOWING, UPCOMING or ARCHIVED");
+			JOptionPane.showMessageDialog(this, "Status must be : SHOWING, UPCOMING or ARCHIVED"); // Not needed
 		}
     }//GEN-LAST:event_doneButtonActionPerformed
 
