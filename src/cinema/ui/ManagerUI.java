@@ -105,11 +105,11 @@ public class ManagerUI extends javax.swing.JFrame {
 	
 	public void loadShowtimeTable() {
 		Object[][] showtimeData = Showtime.get2DArray();
-		String[] showtimeHeaders = {"ShowtimeID", "MovieID", "Hall", "Date & Time", "Price"};
+		String[] showtimeHeaders = {"ShowtimeID", "Movie", "Hall", "Date & Time", "Capacity"};
 		DefaultTableModel showtimeModel = new DefaultTableModel(showtimeData, showtimeHeaders) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return column != 0;
+				return column == 2 || column == 3 || column == 4;
 			}
 		};
 		showtimeTable.setModel(showtimeModel);

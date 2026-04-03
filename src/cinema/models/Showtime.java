@@ -109,13 +109,13 @@ public class Showtime extends Entity {
 			row[1] = (m != null) ? m.getTitle() : "Unknown (" + s.getMovieID() + ")";
 			row[2] = s.getHallNum();
 			row[3] = s.getDateTime();
-			row[4] = s.getPrice();
+
 
 			long bookedCount = java.util.Arrays.stream(s.getSeats())
 								.flatMap(java.util.Arrays::stream)
 								.filter(seat -> seat.equals("1"))
 								.count();
-			row[5] = bookedCount + "/50";
+			row[4] = bookedCount + "/50";
 		});
 	}
 
