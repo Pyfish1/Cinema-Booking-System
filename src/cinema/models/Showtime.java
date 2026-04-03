@@ -116,6 +116,7 @@ public class Showtime extends Entity {
 								.filter(seat -> seat.equals("1"))
 								.count();
 			row[4] = bookedCount + "/50";
+                        row[5] = s.getPrice();
 		});
 	}
 

@@ -105,11 +105,11 @@ public class ManagerUI extends javax.swing.JFrame {
 	
 	public void loadShowtimeTable() {
 		Object[][] showtimeData = Showtime.get2DArray();
-		String[] showtimeHeaders = {"ShowtimeID", "Movie", "Hall", "Date & Time", "Capacity"};
+		String[] showtimeHeaders = {"ShowtimeID", "Movie", "Hall", "Date & Time", "Capacity", "Price"};
 		DefaultTableModel showtimeModel = new DefaultTableModel(showtimeData, showtimeHeaders) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return column == 2 || column == 3 || column == 4;
+				return column == 2 || column == 3 || column == 5;
 			}
 		};
 		showtimeTable.setModel(showtimeModel);
@@ -152,29 +152,25 @@ public class ManagerUI extends javax.swing.JFrame {
 	
         private void updateShowtimeFromTable(int row){
             try{
-            DefaultTableModel model = (DefaultTableModel) showtimeTable.getModel();
-            
+                DefaultTableModel model = (DefaultTableModel) showtimeTable.getModel();
                 String ID = model.getValueAt(row, 0).toString();
-                String MOVIEID = model.getValueAt(row, 1).toString();
-                int HALL = Integer.parseInt(model.getValueAt(row, 2).toString());
-                String DATETIME = model.getValueAt(row,3).toString();
-                double PRICE = Double.parseDouble(model.getValueAt(row,4).toString());
-                
+
                 Showtime existing = Showtime.getAll().stream()
-                            .filter(s -> s.getShowtimeID().equals(ID))
-                            .findFirst().orElse(null);
-                
-                String HEXSEATS;
-                if (existing != null) {
-                    HEXSEATS = Showtime.encodeSeats(existing.getSeats());
-                } else {
-                    HEXSEATS = cinema.services.SeatManager.getEmptyHallHex();
-                }
-        
-                Showtime updatedShowtime = new Showtime(ID, MOVIEID, HALL, DATETIME,HEXSEATS, PRICE);
-                Showtime.update(ID, updatedShowtime);
-                
-                System.out.println("Showtime " + ID + " updated in text file.");
+                        .filter(s -> s.getShowtimeID().equals(ID))
+                        .findFirst().orElse(null);
+
+                if (existing == null) return;
+
+                int HALL = Integer.parseInt(model.getValueAt(row, 2).toString());
+                String DATETIME = model.getValueAt(row, 3).toString();
+                double PRICE = Double.parseDouble(model.getValueAt(row, 5).toString()); // Now at Index 5
+
+                String MOVIEID = existing.getMovieID();
+                String HEXSEATS = Showtime.encodeSeats(existing.getSeats());
+                Showtime updated = new Showtime(ID, MOVIEID, HALL, DATETIME, HEXSEATS, PRICE);
+                Showtime.update(ID, updated);
+
+                System.out.println("Showtime " + ID + " updated with Price: " + PRICE);
         }catch (Exception e){
             JOptionPane.showMessageDialog(this, "Update failed: Make sure Hall is an integer and Price is a decimal");
             loadShowtimeTable();
