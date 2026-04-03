@@ -113,6 +113,12 @@ public class ManagerUI extends javax.swing.JFrame {
 			}
 		};
 		showtimeTable.setModel(showtimeModel);
+                showtimeTable.getModel().addTableModelListener(e -> {
+                    if (e.getType() == TableModelEvent.UPDATE) {
+                        int row = e.getFirstRow();
+                        updateShowtimeFromTable(row);
+        }
+    });
 	}
 	
 	private void updateUserFromTable(int row) {

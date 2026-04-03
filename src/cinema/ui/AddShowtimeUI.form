@@ -107,7 +107,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="SeatsLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Seats"/>
+        <Property name="text" type="java.lang.String" value="Price"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="ShowtimeIDField">

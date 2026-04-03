@@ -58,7 +58,7 @@ public class AddShowtimeUI extends javax.swing.JFrame {
 
         DateTimeLabel.setText("Date & Time");
 
-        SeatsLabel.setText("Seats");
+        SeatsLabel.setText("Price");
 
         ShowtimeIDField.addActionListener(this::ShowtimeIDFieldActionPerformed);
 
