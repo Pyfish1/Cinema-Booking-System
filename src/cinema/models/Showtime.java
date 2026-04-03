@@ -52,12 +52,18 @@ public class Showtime extends Entity {
         for (String[] row : seats) {
             for (String seat : row) binary.append(seat.equals("1") ? "1" : "0");
         }
-        return new BigInteger(binary.toString(), 2).toString(16).toUpperCase();
+        String hex =  new BigInteger(binary.toString(), 2).toString(16).toUpperCase();
+        while (hex.length() < 13){
+            hex = "0" + hex;
+        }
+        return hex;
     }
 
     public static String[][] decodeSeats(String hex, int rows, int cols) {
         String binary = new BigInteger(hex, 16).toString(2);
-        while (binary.length() < rows * cols) binary = "0" + binary;
+        while (binary.length() < rows * cols) {
+            binary = "0" + binary; // itsy bitsy whoopsie before this was fixed
+        }
         
         String[][] grid = new String[rows][cols];
         int k = 0;

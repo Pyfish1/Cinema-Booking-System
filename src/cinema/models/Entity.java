@@ -32,19 +32,23 @@ public abstract class Entity {
 
     public static void update(String path, String id, Entity updatedObj) {
         List<String> lines = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        try(BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
             while ((line = br.readLine()) != null) {
-                if (line.startsWith(id + ",")) {
-                    lines.add(updatedObj.toString());
-                } else {
-                    lines.add(line);
+                if (line.trim().isEmpty()) continue; 
+            String[] parts = line.split(",");
+            if (parts.length > 0 && parts[0].equals(id)){
+                lines.add(updatedObj.toString());
+            } else {
+                lines.add(line);
                 }
             }
-        } catch (IOException e) { e.printStackTrace(); }
+        }catch (IOException e) {
+            e.printStackTrace(); 
+        }
         writeLines(path, lines);
-    }
-
+        }
+    
     public static <T> void delete(String path, String id, List<T> all, Function<T, String> idGetter) {
         if (all.removeIf(item -> idGetter.apply(item).equals(id))) {
             saveAll(path, all);
@@ -72,4 +76,4 @@ public abstract class Entity {
 		}
 		return data;
 	}
-}
+    }
