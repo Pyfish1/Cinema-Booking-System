@@ -13,4 +13,3 @@
 013,Oppenheimer,Biography,180,8.4,SHOWING,data/assets/posters/oppenheimer.jpg
 014,Mufasa: The Lion King,Animation,120,0.0,SHOWING,data/assets/posters/mufasa.jpg
 015,Parasite,Thriller,132,8.5,SHOWING,data/assets/posters/parasite.jpg
-016,RoR6,Adult,69,9.9,SHOWING,data/assets/posters/parasite.jpg

@@ -32,7 +32,7 @@ public class BookingUI extends javax.swing.JFrame {
 	private User customer;
 	private List<Seat> selectedSeats = new ArrayList<>();
 	private JButton[][] seatButtons = new JButton[5][10];
-	private final double PRICE_PER_SEAT = 18.00;
+
 	
 
 	/**
@@ -95,7 +95,8 @@ public class BookingUI extends javax.swing.JFrame {
 	}
 	
 	private void updateSummary() {
-		double total = selectedSeats.size() * PRICE_PER_SEAT;
+                double ticketPrice = showtime.getPrice();
+		double total = selectedSeats.size() * ticketPrice;
 		totalLabel.setText(String.format("Total: RM %.2f", total));
 	}
 	
