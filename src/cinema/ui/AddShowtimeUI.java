@@ -48,7 +48,7 @@ public class AddShowtimeUI extends javax.swing.JFrame {
         SeatsField = new javax.swing.JTextField();
         ShowtimeDoneButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         ShowtimeIDLabel.setText("Showtime ID");
 

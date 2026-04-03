@@ -67,7 +67,14 @@ public class ManagerUI extends javax.swing.JFrame {
 			}
 		});
 		
-                
+                showtimeTable.getModel().addTableModelListener(e -> {
+                            int row = e.getFirstRow();
+    
+                            if (e.getType() == TableModelEvent.UPDATE) {
+                                updateShowtimeFromTable(row);
+                        }
+    
+});
 		
 		
 	}
@@ -144,22 +151,35 @@ public class ManagerUI extends javax.swing.JFrame {
 	}
 	
         private void updateShowtimeFromTable(int row){
+            try{
             DefaultTableModel model = (DefaultTableModel) showtimeTable.getModel();
             
                 String ID = model.getValueAt(row, 0).toString();
                 String MOVIEID = model.getValueAt(row, 1).toString();
                 int HALL = Integer.parseInt(model.getValueAt(row, 2).toString());
                 String DATETIME = model.getValueAt(row,3).toString();
-                String SEATS = model.getValueAt(row, 4).toString();
-                double PRICE = Double.parseDouble(model.getValueAt(row,5).toString());
+                double PRICE = Double.parseDouble(model.getValueAt(row,4).toString());
                 
+                Showtime existing = Showtime.getAll().stream()
+                            .filter(s -> s.getShowtimeID().equals(ID))
+                            .findFirst().orElse(null);
                 
-                Showtime updatedShowtime = new Showtime(ID, MOVIEID, HALL, DATETIME, SEATS, PRICE);
+                String HEXSEATS;
+                if (existing != null) {
+                    HEXSEATS = Showtime.encodeSeats(existing.getSeats());
+                } else {
+                    HEXSEATS = cinema.services.SeatManager.getEmptyHallHex();
+                }
+        
+                Showtime updatedShowtime = new Showtime(ID, MOVIEID, HALL, DATETIME,HEXSEATS, PRICE);
                 Showtime.update(ID, updatedShowtime);
                 
                 System.out.println("Showtime " + ID + " updated in text file.");
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this, "Update failed: Make sure Hall is an integer and Price is a decimal");
+            loadShowtimeTable();
+            }
         }
-
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always

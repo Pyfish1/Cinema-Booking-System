@@ -17,6 +17,8 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +53,27 @@ public class CustomerUI extends javax.swing.JFrame {
 		setupCustomLayout();
 		displayMovies("");
 		setLocationRelativeTo(null);
+                setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+                
+                this.addWindowListener(new WindowAdapter() {
+			@Override 
+			public void windowClosing(WindowEvent e) {
+				int confirm = javax.swing.JOptionPane.showConfirmDialog(
+					null, 
+					"Are you sure you want to log out?", 
+					"Logout", 
+					javax.swing.JOptionPane.YES_NO_OPTION
+				);
+				
+				if (confirm == JOptionPane.YES_OPTION) {
+					dispose();
+					
+					LoginUI login = new LoginUI();
+					login.setLocationRelativeTo(null);
+					login.setVisible(true);
+				}
+			}
+		});
 	}
 	
 	private void setupCustomLayout() {

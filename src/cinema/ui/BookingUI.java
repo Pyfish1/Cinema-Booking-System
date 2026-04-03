@@ -144,7 +144,7 @@ public class BookingUI extends javax.swing.JFrame {
         totalLabel = new javax.swing.JLabel();
         confirmButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         javax.swing.GroupLayout seatPanelLayout = new javax.swing.GroupLayout(seatPanel);
         seatPanel.setLayout(seatPanelLayout);
