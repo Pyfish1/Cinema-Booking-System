@@ -5,6 +5,7 @@
 package cinema.ui;
 import cinema.models.Booking;
 import cinema.models.User;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
         
 
@@ -43,6 +44,23 @@ public class CustomerBookingUI extends javax.swing.JFrame {
         
         customerBookingTable.setModel(customerBookingModel);
     }
+    
+    private void deleteBooking() {
+        int selectedRow = customerBookingTable.getSelectedRow();
+        
+        if (selectedRow != -1){
+            String bookingID = customerBookingTable.getValueAt(selectedRow, 0).toString();
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?" , "Confirm cancellation?", JOptionPane.YES_NO_OPTION);
+           
+            if (confirm == JOptionPane.YES_OPTION)  {
+                Booking.delete(bookingID);
+                loadBookingTable();
+                javax.swing.JOptionPane.showMessageDialog(this, "Booking canceled successfully");
+            }else{
+                javax.swing.JOptionPane.showMessageDialog(this, "Please select a booking to delete");
+            }
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -55,6 +73,7 @@ public class CustomerBookingUI extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         customerBookingTable = new javax.swing.JTable();
+        deleteSelectedCustomerButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -71,13 +90,20 @@ public class CustomerBookingUI extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(customerBookingTable);
 
+        deleteSelectedCustomerButton.setText("Delete Selected");
+        deleteSelectedCustomerButton.addActionListener(this::deleteSelectedCustomerButtonActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(deleteSelectedCustomerButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -85,11 +111,19 @@ public class CustomerBookingUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(deleteSelectedCustomerButton)
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void deleteSelectedCustomerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedCustomerButtonActionPerformed
+        // TODO add your handling code here:
+        deleteBooking();
+        
+    }//GEN-LAST:event_deleteSelectedCustomerButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -117,6 +151,7 @@ public class CustomerBookingUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable customerBookingTable;
+    private javax.swing.JButton deleteSelectedCustomerButton;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

@@ -26,6 +26,9 @@ public class Booking extends Entity {
     public static List<Booking> getAll() {
         return Entity.getAll(FILE_PATH, Booking::fromFileString);
     }
+    public static void delete(String id) {
+        Entity.delete(FILE_PATH, id, getAll(), Booking::getBookingID);
+    }
 
     private static Booking fromFileString(String line) {
         String[] p = line.split(",");
@@ -37,6 +40,7 @@ public class Booking extends Entity {
             Double.parseDouble(p[4]) // TotalAmount
         );
     }
+    
 
     @Override
     public String toString() {
@@ -99,6 +103,7 @@ public class Booking extends Entity {
                 .mapToInt(b -> Integer.parseInt(b.bookingID))
                 .max().orElse(0) + 1);
     }
+    
 
     // --- Getters ---
     public String getBookingID() { return bookingID; }
