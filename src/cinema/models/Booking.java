@@ -63,21 +63,34 @@ public class Booking extends Entity {
     }
 
     // --- UI Helpers ---
+    
     public static Object[][] get2DArray() {
-        List<Booking> userBookings = getAll();
+        List<Booking> all = getAll();
+            return Entity.create2DArray(all, 6, (b, row) -> {
+            row[0] = b.getBookingID();
+            row[1] = (b.getUser() != null) ? b.getUser().getName() : "Unknown";
+            row[2] = (b.getShowtime() != null) ? b.getShowtime().getMovie().getTitle() : "N/A";
+            row[3] = b.getSeats().replace(";", ", ");
+            row[4] = (b.getShowtime() != null) ? b.getShowtime().getDateTime() : "N/A";
+            row[5] = String.format("RM %.2f", b.getTotalAmount());
+        });
+}
+    public static Object[][] get2DArray(String currentUserID) {
+        List<Booking> userBookings = getAll().stream()
+                .filter(b -> b.getUserID().equals(currentUserID))
+                .toList();
                 
         
-        return Entity.create2DArray(userBookings, 6, (b, row) -> {
+        return Entity.create2DArray(userBookings, 5, (b, row) -> {
             Showtime s = b.getShowtime();
             Movie m = (s != null) ? s.getMovie() : null;
             User u = b.getUser();
             
             row[0] = b.bookingID;
-            row[1] = (u != null) ? u.getName() : "Unknown user";
-            row[2] = (m != null) ? m.getTitle() : "Unknown Movie";
-            row[3] = b.seats.replace(";", ", "); // Format "A1;A2" -> "A1, A2"
-            row[4] = (s != null) ? s.getDateTime() : "N/A";
-            row[5] = String.format("RM %.2f", b.totalAmount);
+            row[1] = (m != null) ? m.getTitle() : "Unknown Movie";
+            row[2] = b.seats.replace(";", ", "); // Format "A1;A2" -> "A1, A2"
+            row[3] = (s != null) ? s.getDateTime() : "N/A";
+            row[4] = String.format("RM %.2f", b.totalAmount);
         });
     }
 

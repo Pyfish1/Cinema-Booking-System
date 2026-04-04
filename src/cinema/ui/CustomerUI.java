@@ -82,9 +82,14 @@ public class CustomerUI extends javax.swing.JFrame {
 		
 		// Header Panel + Search field
 		JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                JButton historyButton = new JButton("My Bookings");
+                historyButton.addActionListener(e -> {
+                    CustomerBookingUI history = new CustomerBookingUI(this.currentUser);
+                    history.setVisible(true);
+                });
+                
 		header.add(new JLabel("Search Movies : "));
 		searchField = new JTextField(20);
-		
 		searchField.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent evt) {
 				displayMovies(searchField.getText());
@@ -92,6 +97,8 @@ public class CustomerUI extends javax.swing.JFrame {
 		});
 		header.add(searchField);
 		jPanel1.add(header, BorderLayout.NORTH);
+                
+                header.add(historyButton);
 		
 		JPanel galleryWrapper = new JPanel(new BorderLayout());
 		movieGallery = new JPanel(new GridLayout(0, 3, 5, 5));
