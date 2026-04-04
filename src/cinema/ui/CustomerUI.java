@@ -210,9 +210,9 @@ public class CustomerUI extends javax.swing.JFrame {
             BookingUI bookingWin = new BookingUI(chosenShowtime, currentUser, selectedMovie);
             bookingWin.setVisible(true);
             bookingWin.setLocationRelativeTo(this);
-        }
+            }
 	}
-
+        
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always
@@ -255,6 +255,6 @@ public class CustomerUI extends javax.swing.JFrame {
 	 * @param args the command line arguments
 	 */
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
+    protected javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

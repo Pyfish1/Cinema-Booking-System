@@ -112,6 +112,9 @@ public class LoginUI extends javax.swing.JFrame {
 				System.out.println("Customer UI"); 
 				
 			} else if (user.getRole() == User.Role.CLERK) {
+                                ClerkUI ui = new ClerkUI(user);
+                                ui.setVisible(true);
+                                ui.setLocationRelativeTo(null);
 				System.out.println("Clerk UI");
 				
 			} else if (user.getRole() == User.Role.MANAGER) {

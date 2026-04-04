@@ -26,10 +26,14 @@ public class Booking extends Entity {
     public static List<Booking> getAll() {
         return Entity.getAll(FILE_PATH, Booking::fromFileString);
     }
+    
     public static void delete(String id) {
         Entity.delete(FILE_PATH, id, getAll(), Booking::getBookingID);
     }
-
+    
+    public static void update(String id, Booking updated) {
+        Entity.update(FILE_PATH, id, updated);
+    }
     private static Booking fromFileString(String line) {
         String[] p = line.split(",");
         return new Booking(
