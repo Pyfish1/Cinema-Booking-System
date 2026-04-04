@@ -87,6 +87,7 @@ public class ClerkBookingUI extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         clerkBookingTable = new javax.swing.JTable();
+        deleteSelectedClerkButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -103,13 +104,20 @@ public class ClerkBookingUI extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(clerkBookingTable);
 
+        deleteSelectedClerkButton.setText("Delete Selected");
+        deleteSelectedClerkButton.addActionListener(this::deleteSelectedClerkButtonActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(deleteSelectedClerkButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -117,11 +125,18 @@ public class ClerkBookingUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(deleteSelectedClerkButton)
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void deleteSelectedClerkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedClerkButtonActionPerformed
+        // TODO add your handling code here:
+        deleteBooking();
+    }//GEN-LAST:event_deleteSelectedClerkButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -150,6 +165,7 @@ public class ClerkBookingUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable clerkBookingTable;
+    private javax.swing.JButton deleteSelectedClerkButton;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

@@ -47,6 +47,22 @@ public class BookingUI extends javax.swing.JFrame {
 		setTitle("Booking : " + movie.getTitle());
 		setLocationRelativeTo(null);
 	}
+        
+        private double calculateDiscountedTotal(){
+            int count = selectedSeats.size();
+            double pricePerSeat = showtime.getPrice();
+            double subtotal = count * pricePerSeat;
+            
+            String policy = ManagerUI.activeDiscount;
+            if (policy.equals("20% Off")){
+                return subtotal * 0.80;
+            }
+            else if(policy.equals("Buy 2 Free 1")){
+                int freeTicket = count / 3;
+                return (count - freeTicket) * pricePerSeat;
+            }
+            return subtotal;
+        }
 	
 	private void setupSeatMap() {
 		seatPanel.removeAll();
@@ -95,9 +111,14 @@ public class BookingUI extends javax.swing.JFrame {
 	}
 	
 	private void updateSummary() {
-                double ticketPrice = showtime.getPrice();
-		double total = selectedSeats.size() * ticketPrice;
-		totalLabel.setText(String.format("Total: RM %.2f", total));
+                double finalTotal = calculateDiscountedTotal();
+                String discountNote = "";
+                
+                if (!ManagerUI.activeDiscount.equals("None")){
+                    discountNote = " (" + ManagerUI.activeDiscount + " applied)";
+                }
+                        
+		totalLabel.setText(String.format("Total: RM %.2f%s", finalTotal, discountNote));
 	}
 	
 	private void processCheckout() {
@@ -114,7 +135,7 @@ public class BookingUI extends javax.swing.JFrame {
 
 		Showtime.update(showtime.getShowtimeID(), showtime);
 
-		double total = selectedSeats.size() * showtime.getPrice();
+		double total = calculateDiscountedTotal();
 		String bookingID = Booking.generateNextID();
 
 		Booking newBooking = new Booking(

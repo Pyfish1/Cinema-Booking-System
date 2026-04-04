@@ -17,6 +17,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ManagerUI extends javax.swing.JFrame {
 	
+        public static String activeDiscount = "None";
+        
 	private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ManagerUI.class.getName());
 
 	/**
@@ -29,6 +31,7 @@ public class ManagerUI extends javax.swing.JFrame {
 		loadMovieTable();
 		loadShowtimeTable();
                 loadBookingTable();
+                refreshMiscStats();
 		
 		this.addWindowListener(new WindowAdapter() {
 			@Override 
@@ -213,6 +216,14 @@ public class ManagerUI extends javax.swing.JFrame {
         showtimeTable = new javax.swing.JTable();
         deleteSelectedShowtimeButton1 = new javax.swing.JButton();
         addNewShowtimeButton1 = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        revenueLabel = new javax.swing.JLabel();
+        ticketsLabel = new javax.swing.JLabel();
+        policiesCombo = new javax.swing.JComboBox<>();
+        policyApplyButton = new javax.swing.JButton();
+        refreshTablesButton = new javax.swing.JButton();
+        ticketField = new javax.swing.JTextField();
+        revenueField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -381,6 +392,73 @@ public class ManagerUI extends javax.swing.JFrame {
 
         tabbedPane.addTab("Showtimes", jPanel4);
 
+        revenueLabel.setText("Total Revenue:");
+
+        ticketsLabel.setText("Total Tickets Sold:");
+
+        policiesCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "None", "20% Off", "Buy 2 Free 1" }));
+        policiesCombo.addActionListener(this::policiesComboActionPerformed);
+
+        policyApplyButton.setText("Apply");
+        policyApplyButton.addActionListener(this::policyApplyButtonActionPerformed);
+
+        refreshTablesButton.setText("Refresh Tables");
+        refreshTablesButton.addActionListener(this::refreshTablesButtonActionPerformed);
+
+        ticketField.addActionListener(this::ticketFieldActionPerformed);
+
+        revenueField.addActionListener(this::revenueFieldActionPerformed);
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(113, 113, 113)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(policiesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(revenueLabel))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(118, 118, 118)
+                                .addComponent(revenueField, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(policyApplyButton))))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(ticketsLabel)
+                        .addGap(120, 120, 120)
+                        .addComponent(ticketField, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(302, 302, 302)
+                .addComponent(refreshTablesButton)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(68, 68, 68)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(revenueLabel)
+                    .addComponent(revenueField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ticketsLabel)
+                    .addComponent(ticketField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(policiesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(policyApplyButton))
+                .addGap(18, 18, 18)
+                .addComponent(refreshTablesButton)
+                .addContainerGap(309, Short.MAX_VALUE))
+        );
+
+        tabbedPane.addTab("Misc", jPanel5);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -441,6 +519,28 @@ public class ManagerUI extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Please select a showtime to delete");
                 }
         }
+        
+        private void refreshMiscStats(){
+                java.util.List<Booking> allBookings = Booking.getAll();
+                double totalRevenue = 0;
+                int totalTickets = 0;
+                
+                for (Booking b : allBookings){
+                    totalRevenue += b.getTotalAmount();
+                    
+                    String seats = b.getSeats();
+                    if (seats != null && !seats.isEmpty()){
+                        totalTickets += seats.split(";").length;
+                    }
+                }
+                
+                revenueField.setText(String.format("%.2f", totalRevenue));
+                ticketField.setText(String.valueOf(totalTickets));
+                
+                revenueField.setEditable(false);    //makes it so the text field cannot be edited
+                ticketField.setEditable(false);
+                        
+        }
 	
 	
     private void deleteSelectedMoiveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedMoiveButtonActionPerformed
@@ -472,6 +572,34 @@ public class ManagerUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         deleteShowtime();
     }//GEN-LAST:event_deleteSelectedShowtimeButton1ActionPerformed
+
+    private void policiesComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_policiesComboActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_policiesComboActionPerformed
+
+    private void policyApplyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_policyApplyButtonActionPerformed
+        // TODO add your handling code here:
+        String selectedPolicy = policiesCombo.getSelectedItem().toString();
+        ManagerUI.activeDiscount = selectedPolicy;
+    }//GEN-LAST:event_policyApplyButtonActionPerformed
+
+    private void ticketFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ticketFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ticketFieldActionPerformed
+
+    private void revenueFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revenueFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_revenueFieldActionPerformed
+
+    private void refreshTablesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshTablesButtonActionPerformed
+        // TODO add your handling code here:
+        loadUserTable();
+        loadMovieTable();
+        loadShowtimeTable();
+        loadBookingTable();
+        refreshMiscStats();
+        JOptionPane.showMessageDialog(this, "Tables have been refreshed");
+    }//GEN-LAST:event_refreshTablesButtonActionPerformed
 
 	/**
 	 * @param args the command line arguments
@@ -510,13 +638,21 @@ public class ManagerUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable movieTable;
+    private javax.swing.JComboBox<String> policiesCombo;
+    private javax.swing.JButton policyApplyButton;
+    private javax.swing.JButton refreshTablesButton;
+    private javax.swing.JTextField revenueField;
+    private javax.swing.JLabel revenueLabel;
     private javax.swing.JTable showtimeTable;
     private javax.swing.JTabbedPane tabbedPane;
+    private javax.swing.JTextField ticketField;
+    private javax.swing.JLabel ticketsLabel;
     private javax.swing.JTable userTable;
     // End of variables declaration//GEN-END:variables
 }
