@@ -147,7 +147,20 @@ public class BookingUI extends javax.swing.JFrame {
 		);
 
 		newBooking.append();
-		JOptionPane.showMessageDialog(this, "Booking Successful!\nBooking ID: " + bookingID);
+                
+                String receipt =  "------------------------------------------\n"
+                                + "          CINEMA DIGITAL RECEIPT          \n"
+                                + "------------------------------------------\n"
+                                + "Booking ID    : " + bookingID + "\n"
+                                + "Movie Name    : " + this.getTitle().replace("Booking : ", "") + "\n"
+                                + "Seats         : " + seatLabels.toString() + "\n"
+                                + "Total Price   : RM " + String.format("%.2f", total) + "\n"
+                                + "Discount      : " + ManagerUI.activeDiscount + "\n"
+                                + "------------------------------------------\n"
+                                + "      Thank you for your purchase!        \n"
+                                + "------------------------------------------";
+                
+		JOptionPane.showMessageDialog(this, receipt, "Digital receipt", JOptionPane.INFORMATION_MESSAGE);
 		this.dispose();
 	}
 	

@@ -30,7 +30,7 @@ public class ClerkBookingUI extends javax.swing.JFrame {
     
     public void loadClerkBookingTable(){
         Object[][] clerkData = Booking.get2DArray();
-        String[] clerkHeaders = {"ID", "Customer", "Movie", "Seats", "Showtime", "Total"};
+        String[] clerkHeaders = {"ID", "User", "Movie", "Seats", "Showtime", "Total"};
         
         DefaultTableModel clerkModel = new DefaultTableModel(clerkData, clerkHeaders){
             @Override
