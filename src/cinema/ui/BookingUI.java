@@ -160,7 +160,7 @@ public class BookingUI extends javax.swing.JFrame {
                                 + "      Thank you for your purchase!        \n"
                                 + "------------------------------------------";
                 
-		JOptionPane.showMessageDialog(this, receipt, "Digital receipt", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(this, receipt, "Digital receipt", JOptionPane.PLAIN_MESSAGE);
 		this.dispose();
 	}
 	
