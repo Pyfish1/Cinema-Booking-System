@@ -37,7 +37,7 @@ import javax.swing.JTextField;
  * @author Ivan
  */
 public class CustomerUI extends javax.swing.JFrame {
-	
+	// this the gallery page where user can search for films
 	private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CustomerUI.class.getName());
 	
 	private JPanel movieGallery;
@@ -77,6 +77,7 @@ public class CustomerUI extends javax.swing.JFrame {
 	}
 	
 	private void setupCustomLayout() {
+                // overrides netbeans layout
 		// Main cointainer ( BorderLayout )
 		jPanel1.setLayout(new BorderLayout(10, 10));
 		
@@ -167,7 +168,7 @@ public class CustomerUI extends javax.swing.JFrame {
 		return card; // JPanel
 	}
 	
-	private void openBookingForMovie(Movie selectedMovie) {
+	private void openBookingForMovie(Movie selectedMovie) { // filters showtimes to find those matching the selected movie Id
 		List<Showtime> allShowtimes = Showtime.getAll();
 		
 		List<Showtime> movieShowtimes = new ArrayList<>();

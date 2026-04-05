@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package cinema.ui;
+
 import cinema.models.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -16,184 +17,187 @@ import javax.swing.table.DefaultTableModel;
  * @author Ivan
  */
 public class ManagerUI extends javax.swing.JFrame {
-	
-        public static String activeDiscount = "None";
-        
-	private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ManagerUI.class.getName());
 
-	/**
-	 * Creates new form ManagerUI
-	 */
-	public ManagerUI() {
-		initComponents();
-		setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-		loadUserTable();
-		loadMovieTable();
-		loadShowtimeTable();
-                loadBookingTable();
-                refreshMiscStats();
-		
-		this.addWindowListener(new WindowAdapter() {
-			@Override 
-			public void windowClosing(WindowEvent e) {
-				int confirm = javax.swing.JOptionPane.showConfirmDialog(
-					null, 
-					"Are you sure you want to log out?", 
-					"Logout", 
-					javax.swing.JOptionPane.YES_NO_OPTION
-				);
-				
-				if (confirm == JOptionPane.YES_OPTION) {
-					dispose();
-					
-					LoginUI login = new LoginUI();
-					login.setLocationRelativeTo(null);
-					login.setVisible(true);
-				}
-			}
-		});
-		
-		userTable.getModel().addTableModelListener(e -> {
-			int row = e.getFirstRow();
-			int column = e.getColumn();
-			
-			if (e.getType() == TableModelEvent.UPDATE) {
-				updateUserFromTable(row);
-			}
-		});
-			
-		movieTable.getModel().addTableModelListener(e -> {
-			int row = e.getFirstRow();
-			int column = e.getColumn();
-			
-			if (e.getType() == TableModelEvent.UPDATE) {
-				updateMovieFromTable(row);
-			}
-		});
-		
-	}
-	
-	public void loadUserTable() {
-		Object[][] userData = User.get2DArray();
-		String[] userHeaders = {"ID", "Name", "Email", "Password", "Role"};
- 		DefaultTableModel userModel = new DefaultTableModel(userData, userHeaders) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return column != 0; 
-			}
-		};
-		userTable.setModel(userModel);
-	}
-	
-	public void loadMovieTable() {
-		Object[][] movieData = Movie.get2DArray();
-		String[] movieHeaders = {"ID", "Title", "Genre", "Duration ( Minutes )", "Rating", "Status", "Poster Path"};
-		DefaultTableModel movieModel = new DefaultTableModel(movieData, movieHeaders) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return column != 0;
-			}
-		};
-		movieTable.setModel(movieModel);
-	}
-        
-        public void loadBookingTable()  {
-                Object[][] bookingData = Booking.get2DArray();
-                String[] bookingHeaders = {"Booking ID", "Customer Name", "Movie", "Seats", "Showtime", "Total paid"};
-                DefaultTableModel bookingModel = new DefaultTableModel(bookingData, bookingHeaders){
-                    @Override
-                    public boolean isCellEditable(int row, int column)  {
-                        return false;
-                    }
-                };
-                bookingTable.setModel(bookingModel);
-        }
-	
-	public void loadShowtimeTable() {
-		Object[][] showtimeData = Showtime.get2DArray();
-		String[] showtimeHeaders = {"ShowtimeID", "Movie", "Hall", "Date & Time", "Capacity", "Price"};
-		DefaultTableModel showtimeModel = new DefaultTableModel(showtimeData, showtimeHeaders) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return column == 2 || column == 3 || column == 5;
-			}
-		};
-		showtimeTable.setModel(showtimeModel);
-                showtimeTable.getModel().addTableModelListener(e -> {
-                    if (e.getType() == TableModelEvent.UPDATE) {
-                        int row = e.getFirstRow();
-                        updateShowtimeFromTable(row);
-        }
-                });
-	}
-	
-	private void updateUserFromTable(int row) {
-		DefaultTableModel model = (DefaultTableModel) userTable.getModel();
-		
-		String ID = model.getValueAt(row, 0).toString();
-		String NAME = model.getValueAt(row, 1).toString();
-		String EMAIL = model.getValueAt(row, 2).toString();
-		String PASSWORD = model.getValueAt(row, 3).toString();
-		String ROLESTR = model.getValueAt(row, 4).toString(); // TODO : Add validation here.
+    public static String activeDiscount = "None"; // global current pricing policy
 
-		User.Role ROLE = User.Role.valueOf(ROLESTR.toUpperCase());
-		
-		User updatedUser = User.create(ID, NAME, EMAIL, PASSWORD, ROLE);	
-		User.update(ID, updatedUser);
-		
-		System.out.println("User " + ID + " updated in text file.");
-	}
-	
-	private void updateMovieFromTable(int row) {
-		DefaultTableModel model = (DefaultTableModel) movieTable.getModel();
-		
-		String ID = model.getValueAt(row, 0).toString();
-		String TITLE = model.getValueAt(row, 1).toString();
-		String GENRE = model.getValueAt(row, 2).toString();
-		int DURATION = Integer.parseInt(model.getValueAt(row, 3).toString()); // autistic code my god - Ivan
-		double RATING = Double.parseDouble(model.getValueAt(row, 4).toString()); // TODO : DEFINITELY ADD VALIDATION HERE. FUTURE IVAN PLS FIX
-		Movie.Status STATUS = Movie.Status.valueOf(model.getValueAt(row, 5).toString());
-		String POSTERPATH = model.getValueAt(row, 6).toString();
-		
-		Movie updatedMovie = new Movie(ID, TITLE, GENRE, DURATION, RATING, STATUS, POSTERPATH);
-		Movie.update(ID, updatedMovie); // Takes in ID and Movie object, replaces the corresponding ID the object.
-		
-		System.out.println("Movie " + ID + " updated in text file.");
-		
-	}
-	
-        private void updateShowtimeFromTable(int row){
-            try{
-                DefaultTableModel model = (DefaultTableModel) showtimeTable.getModel();
-                String ID = model.getValueAt(row, 0).toString();
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ManagerUI.class.getName());
 
-                Showtime existing = Showtime.getAll().stream()
-                        .filter(s -> s.getShowtimeID().equals(ID))
-                        .findFirst().orElse(null);
+    /**
+     * Creates new form ManagerUI
+     */
+    public ManagerUI() {
+        initComponents();
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        loadUserTable();
+        loadMovieTable();
+        loadShowtimeTable();
+        loadBookingTable();
+        refreshMiscStats();
 
-                if (existing == null) return;
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int confirm = javax.swing.JOptionPane.showConfirmDialog(
+                        null,
+                        "Are you sure you want to log out?",
+                        "Logout",
+                        javax.swing.JOptionPane.YES_NO_OPTION
+                );
 
-                int HALL = Integer.parseInt(model.getValueAt(row, 2).toString());
-                String DATETIME = model.getValueAt(row, 3).toString();
-                double PRICE = Double.parseDouble(model.getValueAt(row, 5).toString()); // Now at Index 5
+                if (confirm == JOptionPane.YES_OPTION) {
+                    dispose();
 
-                String MOVIEID = existing.getMovieID();
-                String HEXSEATS = Showtime.encodeSeats(existing.getSeats());
-                Showtime updated = new Showtime(ID, MOVIEID, HALL, DATETIME, HEXSEATS, PRICE);
-                Showtime.update(ID, updated);
+                    LoginUI login = new LoginUI();
+                    login.setLocationRelativeTo(null);
+                    login.setVisible(true);
+                }
+            }
+        });
 
-                System.out.println("Showtime " + ID + " updated with Price: " + PRICE);
-        }catch (Exception e){
+        userTable.getModel().addTableModelListener(e -> {
+            int row = e.getFirstRow();
+            int column = e.getColumn();
+
+            if (e.getType() == TableModelEvent.UPDATE) {
+                updateUserFromTable(row);
+            }
+        });
+
+        movieTable.getModel().addTableModelListener(e -> {
+            int row = e.getFirstRow();
+            int column = e.getColumn();
+
+            if (e.getType() == TableModelEvent.UPDATE) {
+                updateMovieFromTable(row);
+            }
+        });
+
+    }
+
+    public void loadUserTable() {
+        Object[][] userData = User.get2DArray();
+        String[] userHeaders = {"ID", "Name", "Email", "Password", "Role"};
+        DefaultTableModel userModel = new DefaultTableModel(userData, userHeaders) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
+        userTable.setModel(userModel);
+    }
+
+    public void loadMovieTable() {
+        Object[][] movieData = Movie.get2DArray();
+        String[] movieHeaders = {"ID", "Title", "Genre", "Duration ( Minutes )", "Rating", "Status", "Poster Path"};
+        DefaultTableModel movieModel = new DefaultTableModel(movieData, movieHeaders) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column != 0;
+            }
+        };
+        movieTable.setModel(movieModel);
+    }
+
+    public void loadBookingTable() {
+        Object[][] bookingData = Booking.get2DArray();
+        String[] bookingHeaders = {"Booking ID", "Customer Name", "Movie", "Seats", "Showtime", "Total paid"};
+        DefaultTableModel bookingModel = new DefaultTableModel(bookingData, bookingHeaders) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        bookingTable.setModel(bookingModel);
+    }
+
+    public void loadShowtimeTable() {
+        Object[][] showtimeData = Showtime.get2DArray();
+        String[] showtimeHeaders = {"ShowtimeID", "Movie", "Hall", "Date & Time", "Capacity", "Price"};
+        DefaultTableModel showtimeModel = new DefaultTableModel(showtimeData, showtimeHeaders) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return column == 2 || column == 3 || column == 5;
+            }
+        };
+        showtimeTable.setModel(showtimeModel);
+        showtimeTable.getModel().addTableModelListener(e -> {
+            if (e.getType() == TableModelEvent.UPDATE) {
+                int row = e.getFirstRow();
+                updateShowtimeFromTable(row);
+            }
+        });
+    }
+
+    private void updateUserFromTable(int row) {
+        DefaultTableModel model = (DefaultTableModel) userTable.getModel();
+
+        String ID = model.getValueAt(row, 0).toString();
+        String NAME = model.getValueAt(row, 1).toString();
+        String EMAIL = model.getValueAt(row, 2).toString();
+        String PASSWORD = model.getValueAt(row, 3).toString();
+        String ROLESTR = model.getValueAt(row, 4).toString(); // TODO : Add validation here.
+
+        User.Role ROLE = User.Role.valueOf(ROLESTR.toUpperCase());
+
+        User updatedUser = User.create(ID, NAME, EMAIL, PASSWORD, ROLE);
+        User.update(ID, updatedUser);
+
+        System.out.println("User " + ID + " updated in text file.");
+    }
+
+    private void updateMovieFromTable(int row) {        // reads the updated row form the table and overwrites that specific ID in movie.txt
+        DefaultTableModel model = (DefaultTableModel) movieTable.getModel();
+
+        String ID = model.getValueAt(row, 0).toString();
+        String TITLE = model.getValueAt(row, 1).toString();
+        String GENRE = model.getValueAt(row, 2).toString();
+        int DURATION = Integer.parseInt(model.getValueAt(row, 3).toString()); // autistic code my god - Ivan
+        double RATING = Double.parseDouble(model.getValueAt(row, 4).toString()); // TODO : DEFINITELY ADD VALIDATION HERE. FUTURE IVAN PLS FIX
+        Movie.Status STATUS = Movie.Status.valueOf(model.getValueAt(row, 5).toString());
+        String POSTERPATH = model.getValueAt(row, 6).toString();
+
+        Movie updatedMovie = new Movie(ID, TITLE, GENRE, DURATION, RATING, STATUS, POSTERPATH);
+        Movie.update(ID, updatedMovie); // Takes in ID and Movie object, replaces the corresponding ID the object.
+
+        System.out.println("Movie " + ID + " updated in text file.");
+
+    }
+
+    private void updateShowtimeFromTable(int row) {
+        try {
+            DefaultTableModel model = (DefaultTableModel) showtimeTable.getModel();
+            String ID = model.getValueAt(row, 0).toString();
+
+            Showtime existing = Showtime.getAll().stream()
+                    .filter(s -> s.getShowtimeID().equals(ID))
+                    .findFirst().orElse(null);
+
+            if (existing == null) {
+                return;
+            }
+
+            int HALL = Integer.parseInt(model.getValueAt(row, 2).toString());
+            String DATETIME = model.getValueAt(row, 3).toString();
+            double PRICE = Double.parseDouble(model.getValueAt(row, 5).toString()); // Now at Index 5
+
+            String MOVIEID = existing.getMovieID();
+            String HEXSEATS = Showtime.encodeSeats(existing.getSeats());
+            Showtime updated = new Showtime(ID, MOVIEID, HALL, DATETIME, HEXSEATS, PRICE);
+            Showtime.update(ID, updated);
+
+            System.out.println("Showtime " + ID + " updated with Price: " + PRICE);
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Update failed: Make sure Hall is an integer and Price is a decimal");
             loadShowtimeTable();
-            }
         }
-	/**
-	 * This method is called from within the constructor to initialize the form.
-	 * WARNING: Do NOT modify this code. The content of this method is always
-	 * regenerated by the Form Editor.
-	 */
-	@SuppressWarnings("unchecked")
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -475,82 +479,82 @@ public class ManagerUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-	private void deleteMovie() {
-		int selectedRow = movieTable.getSelectedRow();
-		if (selectedRow != -1) {
-			String ID = movieTable.getValueAt(selectedRow, 0).toString();
-			int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
-			
-			if (confirm == JOptionPane.YES_OPTION) {
-				Movie.delete(ID);
-				loadMovieTable(); // Reload list.
-			}
-		} else {
-			JOptionPane.showMessageDialog(this, "Please select a movie to delete");
-		}
-	}
-	
-	private void deleteUser() {
-		int selectedRow = userTable.getSelectedRow();
-		if (selectedRow != -1) {
-			String ID = userTable.getValueAt(selectedRow, 0).toString();
-			int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
-			
-			if (confirm == JOptionPane.YES_OPTION) {
-				User.delete(ID); // Delete from file.
-				loadUserTable(); // Reload list.
-			}
-		} else {
-			JOptionPane.showMessageDialog(this, "Please select a user to delete");
-		}
-	}
-	
-        private void deleteShowtime() {
-                int selectedRow = showtimeTable.getSelectedRow();
-                if (selectedRow != -1) {
-                    String ID = showtimeTable.getValueAt(selectedRow,0).toString();
-                    int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
-                    
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        Showtime.delete(ID);
-                        loadShowtimeTable();
-                    }
-                } else {
-                        JOptionPane.showMessageDialog(this, "Please select a showtime to delete");
-                }
+    private void deleteMovie() {
+        int selectedRow = movieTable.getSelectedRow();
+        if (selectedRow != -1) {
+            String ID = movieTable.getValueAt(selectedRow, 0).toString();
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                Movie.delete(ID);
+                loadMovieTable(); // Reload list.
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a movie to delete");
         }
-        
-        private void refreshMiscStats(){
-                java.util.List<Booking> allBookings = Booking.getAll();
-                double totalRevenue = 0;
-                int totalTickets = 0;
-                
-                for (Booking b : allBookings){
-                    totalRevenue += b.getTotalAmount();
-                    
-                    String seats = b.getSeats();
-                    if (seats != null && !seats.isEmpty()){
-                        totalTickets += seats.split(";").length;
-                    }
-                }
-                
-                revenueField.setText(String.format("%.2f", totalRevenue));
-                ticketField.setText(String.valueOf(totalTickets));
-                
-                revenueField.setEditable(false);    //makes it so the text field cannot be edited
-                ticketField.setEditable(false);
-                        
+    }
+
+    private void deleteUser() {
+        int selectedRow = userTable.getSelectedRow();
+        if (selectedRow != -1) {
+            String ID = userTable.getValueAt(selectedRow, 0).toString();
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                User.delete(ID); // Delete from file.
+                loadUserTable(); // Reload list.
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a user to delete");
         }
-	
-	
+    }
+
+    private void deleteShowtime() {
+        int selectedRow = showtimeTable.getSelectedRow();
+        if (selectedRow != -1) {
+            String ID = showtimeTable.getValueAt(selectedRow, 0).toString();
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                Showtime.delete(ID);
+                loadShowtimeTable();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a showtime to delete");
+        }
+    }
+
+    private void refreshMiscStats() {   // total revenue and ticket count for misc tab
+        java.util.List<Booking> allBookings = Booking.getAll();
+        double totalRevenue = 0;
+        int totalTickets = 0;
+
+        for (Booking b : allBookings) {
+            totalRevenue += b.getTotalAmount();
+
+            String seats = b.getSeats();
+            if (seats != null && !seats.isEmpty()) {
+                totalTickets += seats.split(";").length;
+            }
+        }
+
+        revenueField.setText(String.format("%.2f", totalRevenue));
+        ticketField.setText(String.valueOf(totalTickets));
+
+        revenueField.setEditable(false);    //makes it so the text field cannot be edited
+        ticketField.setEditable(false);
+
+    }
+
+
     private void deleteSelectedMoiveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedMoiveButtonActionPerformed
-		deleteMovie();
+        deleteMovie();
     }//GEN-LAST:event_deleteSelectedMoiveButtonActionPerformed
 
     private void addNewMovieButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewMovieButtonActionPerformed
         AddMovieUI ui = new AddMovieUI(this);
-		ui.setVisible(true);
-		ui.setLocationRelativeTo(null);
+        ui.setVisible(true);
+        ui.setLocationRelativeTo(null);
     }//GEN-LAST:event_addNewMovieButtonActionPerformed
 
     private void deleteSelectedUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedUserButtonActionPerformed
@@ -564,8 +568,8 @@ public class ManagerUI extends javax.swing.JFrame {
     private void addNewShowtimeButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewShowtimeButton1ActionPerformed
         // TODO add your handling code here:
         AddShowtimeUI ui = new AddShowtimeUI(this);
-            ui.setVisible(true);
-            ui.setLocationRelativeTo(null);
+        ui.setVisible(true);
+        ui.setLocationRelativeTo(null);
     }//GEN-LAST:event_addNewShowtimeButton1ActionPerformed
 
     private void deleteSelectedShowtimeButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSelectedShowtimeButton1ActionPerformed
@@ -601,30 +605,30 @@ public class ManagerUI extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Tables have been refreshed");
     }//GEN-LAST:event_refreshTablesButtonActionPerformed
 
-	/**
-	 * @param args the command line arguments
-	 */
-	public static void main(String args[]) {
-		/* Set the Nimbus look and feel */
-		//<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-		/* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-		 */
-		try {
-			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					javax.swing.UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-			logger.log(java.util.logging.Level.SEVERE, null, ex);
-		}
-		//</editor-fold>
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
 
-		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(() -> new ManagerUI().setVisible(true));
-	}
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> new ManagerUI().setVisible(true));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNewMovieButton;

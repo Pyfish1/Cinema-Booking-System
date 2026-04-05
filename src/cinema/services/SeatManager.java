@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author Ivan
  */
-public class SeatManager {
+public class SeatManager {      //logic for bitmasking
 	private static final int ROWS = 5;
 	private static final int COLS = 10;
 	private static final int TOTAL_SEATS = ROWS * COLS;
@@ -27,7 +27,7 @@ public class SeatManager {
 		return grid;
 	}
 	
-	public static String updateSeats(String hex, List<Seat> newlyBooked) {
+	public static String updateSeats(String hex, List<Seat> newlyBooked) {  // convert hex to binary 
 		String binary = new BigInteger(hex, 16).toString(2);
 		binary = String.format("%" + TOTAL_SEATS + "s", binary).replace(' ', '0');
 		char[] bits = binary.toCharArray();

@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.util.function.Function;
 
-public abstract class Entity {
+public abstract class Entity {      // class for all data models, allows for create, read, updating, and deletign
     protected final String filePath;
 
     public Entity(String filePath) { this.filePath = filePath; }
@@ -12,13 +12,13 @@ public abstract class Entity {
     @Override
     public abstract String toString();
 
-    public void append() {
+    public void append() {          // appends a single record to the file using the object's toString()
         try (PrintWriter pw = new PrintWriter(new FileWriter(filePath, true))) {
             pw.println(this.toString());
         } catch (IOException e) { e.printStackTrace(); }
     }
 
-    public static <T> void saveAll(String path, List<T> items) {
+    public static <T> void saveAll(String path, List<T> items) {        //replaces whole file with items for full updates/deletes
         List<String> lines = new ArrayList<>();
         for (T item : items) lines.add(item.toString());
         writeLines(path, lines);

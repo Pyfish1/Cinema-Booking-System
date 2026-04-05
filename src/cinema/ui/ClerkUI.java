@@ -19,13 +19,13 @@ public class ClerkUI extends CustomerUI {
      */
     public ClerkUI(User user) {
         super(user);    // ts makes it so that it reuses the logic from customerUI
-        clerkPermission();
+        clerkPermission();      //modifies customerUI to have clerk permisisons
         this.revalidate();
         this.repaint();
         setTitle("Clerk Menu: " + user.getName());
     }
     
-    private void clerkPermission() {
+    private void clerkPermission() {    // overriedes the bookings button from customerUI with all bookings for Clerk
         JPanel main = jPanel1;
         BorderLayout layout = (BorderLayout) main.getLayout();
         Component northComp = layout.getLayoutComponent(BorderLayout.NORTH);

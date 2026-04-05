@@ -20,13 +20,13 @@ public class DummyData {
 	private static final String SHOWTIMES_FILE = DATA_DIR + "/showtimes.txt";
 	
 	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm");
-	
-	public static void ensureDirectoryExists() {
+	// paths and formatter
+	public static void ensureDirectoryExists() {    //this just makes sure that the data folder exist and creats it if not found
 		File directory = new File(DATA_DIR);
 		if (!directory.exists()) { directory.mkdir(); }				
 	}
 	
-	public static void generateUserDummyData() {
+	public static void generateUserDummyData() {    //generates data in users.txt for debugging blah blah
 		
 		// SCHEMA : ID | NAME | EMAIL | PASSWORD | ROLE
 		
@@ -35,13 +35,13 @@ public class DummyData {
 		System.out.println("Generating Dummy Data for users.txt");	
 		
 		List<String> users = new ArrayList<>();
-        users.add("001,Ivan,admin,admin,MANAGER");
-        users.add("002,Ian,clerk,clerk,CLERK");
-        users.add("003,Isaac,customer,customer,CUSTOMER");
+        users.add("001,Ivan,ivanho@mail.com,admin,MANAGER");
+        users.add("002,Ian,charlieclerk@mail.com,clerk,CLERK");
+        users.add("003,Isaac,tanjiro@mail.com,customer,CUSTOMER");
         DataHandler.saveToFile(USER_FILE, users);
 	}
 	
-	public static void generateMovieDummyData() {
+	public static void generateMovieDummyData() {       //same as user but with movies instead
 		
 		// SCHEMA : ID, TITLE, GENRE, DURATION, RATING, STATUS, POSTERPATH
 		// ENUM STATUS : SHOWING, UPCOMING, ARCHIVED
@@ -71,8 +71,8 @@ public class DummyData {
 
 	}
 	
-	public static void generateShowtimeDummyData() {
-        ensureDirectoryExists();
+	public static void generateShowtimeDummyData() {    // ts one quite cool, nested loop for the selected movies to make it so that 
+        ensureDirectoryExists();                            // 12 random bookings everytime, but lowkey ts js for debugging
         System.out.println("Generating Showtimes...");
         
         List<Showtime> showtimes = new ArrayList<>();
@@ -98,7 +98,7 @@ public class DummyData {
             }
         }
         
-        Entity.saveAll("data/showtimes.txt", showtimes);
+        Entity.saveAll("data/showtimes.txt", showtimes);    //saves showtime objects
     }
 	
 			

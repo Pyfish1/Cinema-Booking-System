@@ -3,7 +3,7 @@ package cinema.models;
 import java.util.List;
 import java.util.Arrays;
 
-public class Booking extends Entity {
+public class Booking extends Entity {   // stores booking data
     private String bookingID;
     private String userID;
     private String showtimeID;

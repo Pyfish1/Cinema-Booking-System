@@ -64,7 +64,7 @@ public class BookingUI extends javax.swing.JFrame {
             return subtotal;
         }
 	
-	private void setupSeatMap() {
+	private void setupSeatMap() {   
 		seatPanel.removeAll();
 		seatPanel.setLayout(new GridBagLayout());
 		JPanel innerGrid = new JPanel(new GridLayout(5, 10, 5, 5));
@@ -121,7 +121,8 @@ public class BookingUI extends javax.swing.JFrame {
 		totalLabel.setText(String.format("Total: RM %.2f%s", finalTotal, discountNote));
 	}
 	
-	private void processCheckout() {
+	private void processCheckout() {        // updates showtime seats in files
+                                                //saves new bookings , makes a digital receipt
 		if (selectedSeats.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Please select at least 1 seat");
 			return;
@@ -160,7 +161,7 @@ public class BookingUI extends javax.swing.JFrame {
                                 + "      Thank you for your purchase!        \n"
                                 + "------------------------------------------";
                 
-		JOptionPane.showMessageDialog(this, receipt, "Digital receipt", JOptionPane.INFORMATION_MESSAGE);
+		JOptionPane.showMessageDialog(this, receipt, "Digital receipt", JOptionPane.PLAIN_MESSAGE);
 		this.dispose();
 	}
 	

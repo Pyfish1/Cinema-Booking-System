@@ -4,7 +4,8 @@ import java.math.BigInteger;
 import java.util.List;
 import cinema.models.Entity;
 
-public class Showtime extends Entity {
+public class Showtime extends Entity {  //seats quite cool where they are handled by the Hex-to-Binary conversion
+                                        //to keep data files compact
     private String showtimeID, movieID, dateTime;
     private int hallNum;
     private String[][] seats; // 0 for empty, 1 for booked
@@ -59,7 +60,7 @@ public class Showtime extends Entity {
         return hex;
     }
 
-    public static String[][] decodeSeats(String hex, int rows, int cols) {
+    public static String[][] decodeSeats(String hex, int rows, int cols) {      // this the converting frm Hex to binary, then maps it to 2D array
         String binary = new BigInteger(hex, 16).toString(2);
         while (binary.length() < rows * cols) {
             binary = "0" + binary; // itsy bitsy whoopsie before this was fixed
@@ -75,7 +76,7 @@ public class Showtime extends Entity {
 
     // --- Methods ---
     public void bookSeat(int row, int col) {
-        this.seats[row][col] = "1";
+        this.seats[row][col] = "1";     
     }
 
     public static List<Showtime> getAll() {

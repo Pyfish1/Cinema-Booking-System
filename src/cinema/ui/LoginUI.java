@@ -108,7 +108,7 @@ public class LoginUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-
+                // authenticates credentials againts user.txt
 		String email = emailField.getText().trim();
 		String password = new String(passwordField.getPassword());
 		

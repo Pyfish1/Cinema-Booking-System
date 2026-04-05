@@ -41,6 +41,7 @@ public class SignupUI extends javax.swing.JFrame {
         passwordField = new javax.swing.JPasswordField();
         passwordLabel = new javax.swing.JLabel();
         backButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         jTextField2.setText("jTextField1");
 
@@ -57,6 +58,8 @@ public class SignupUI extends javax.swing.JFrame {
 
         backButton.setText("Back");
         backButton.addActionListener(this::backButtonActionPerformed);
+
+        jLabel1.setText("Sign Up Page For The Cinema");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -86,12 +89,17 @@ public class SignupUI extends javax.swing.JFrame {
                         .addGap(71, 71, 71))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(backButton)
-                        .addContainerGap())))
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(120, 120, 120))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(93, Short.MAX_VALUE)
+                .addContainerGap(47, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(emailLabel))
@@ -178,6 +186,7 @@ public class SignupUI extends javax.swing.JFrame {
     private javax.swing.JButton backButton;
     private javax.swing.JTextField emailField;
     private javax.swing.JLabel emailLabel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField nameField;
     private javax.swing.JLabel nameLabel;

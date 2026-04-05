@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
  *
  * @author Ivan
  */
-public abstract class User extends Entity { 
+public abstract class User extends Entity {     //polymorphism for diff roles
 	public enum Role { MANAGER, CLERK, CUSTOMER }
 	
 	private String userID, name, email, password;
@@ -35,7 +35,7 @@ public abstract class User extends Entity {
 	public String getRoleString() { return role.toString(); }
     
 	// -- Data Logic	
-	private static User fromFileString(String line) {
+	private static User fromFileString(String line) {       
 		String[] p = line.split(",");
 		
 		String ID = p[0];
@@ -101,7 +101,7 @@ public abstract class User extends Entity {
 		}
 	}
 	
-	public static User authenticate(String email, String password) {
+	public static User authenticate(String email, String password) {    // validates login credentials with stored user data
 		return getAll().stream()
 				.filter(u -> u.getEmail().equals(email) && u.getPassword().equals(password))
 				.findFirst().orElse(null);

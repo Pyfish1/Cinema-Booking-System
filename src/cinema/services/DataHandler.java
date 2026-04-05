@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @author Ivan
  */
-public class DataHandler {
+public class DataHandler {      //file reader that interacts with local files
 	public static void saveToFile(String filePath, List<String> data) {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
 			for (String line : data) {

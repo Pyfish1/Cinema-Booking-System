@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author ivana
  */
-public class CustomerBookingUI extends javax.swing.JFrame {
+public class CustomerBookingUI extends javax.swing.JFrame {     // simplified view for customers to see only their reservation history  
     
     private User currentUser;
     
@@ -31,7 +31,7 @@ public class CustomerBookingUI extends javax.swing.JFrame {
         loadBookingTable();
     }
     
-    public void loadBookingTable()  {
+    public void loadBookingTable()  {       // this retrieves only the bookings that links with the logged in user
         Object[][] customerBookingData = Booking.get2DArray(currentUser.getUserID());
         String[] customerBookingHeaders = {"Booking ID", "Movie", "Seats", "Date & Time", "Total Paid"};
         
@@ -45,7 +45,7 @@ public class CustomerBookingUI extends javax.swing.JFrame {
         customerBookingTable.setModel(customerBookingModel);
     }
     
-    private void deleteBooking() {
+    private void deleteBooking() {      // this is to cancel bookings
         int selectedRow = customerBookingTable.getSelectedRow();
         
         if (selectedRow != -1){
