@@ -35,9 +35,9 @@ public class DummyData {
 		System.out.println("Generating Dummy Data for users.txt");	
 		
 		List<String> users = new ArrayList<>();
-        users.add("001,Ivan,admin,admin,MANAGER");
-        users.add("002,Ian,clerk,clerk,CLERK");
-        users.add("003,Isaac,customer,customer,CUSTOMER");
+        users.add("001,Ivan,ivanho1308@gmail.com,admin,MANAGER");
+        users.add("002,Ian,charlieclerk@gmail.com,clerk,CLERK");
+        users.add("003,Isaac,tanjiro@gmail.com,customer,CUSTOMER");
         DataHandler.saveToFile(USER_FILE, users);
 	}
 	
