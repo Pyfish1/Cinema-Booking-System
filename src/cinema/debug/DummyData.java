@@ -13,7 +13,7 @@ import java.util.Random;
  *
  * @author Ivan
  */
-public class DummyData {
+public class DummyData {        // IMPORTANT!! : Dummy data is generated everytime the program is run again, previous data is deleted , PLEASE DM one of us or @ us if confused
 	private static final String DATA_DIR = "data";
 	private static final String USER_FILE = DATA_DIR  + "/users.txt";
 	private static final String MOVIE_FILE = DATA_DIR + "/movies.txt";
