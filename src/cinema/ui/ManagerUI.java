@@ -563,6 +563,9 @@ public class ManagerUI extends javax.swing.JFrame {
 
     private void addNewUserButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewUserButtonActionPerformed
         // TODO add your handling code here:
+        AddUserUI ui = new AddUserUI(this);
+        ui.setVisible(true);
+        ui.setLocationRelativeTo(null);
     }//GEN-LAST:event_addNewUserButtonActionPerformed
 
     private void addNewShowtimeButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewShowtimeButton1ActionPerformed
