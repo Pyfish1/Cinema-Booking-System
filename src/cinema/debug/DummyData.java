@@ -51,8 +51,8 @@ public class DummyData {
         System.out.println("Generating Dummy Data for movies.txt");
         List<String> movies = new ArrayList<>();
 		
-		movies.add("001,Dune: Part Two,Sci-Fi,166,8.8,SHOWING,data/assets/posters/dune2.jpg");
-		movies.add("002,The Dark Knight,Action,152,9.0,SHOWING,data/assets/posters/tdk.jpg");
+		movies.add("001,Demon Slayer : Mugen Train,Animation,178,10.0,SHOWING,data/assets/posters/mugen.jpg");
+		movies.add("002,Demon Slayer : Infinity Castle,Animation,152,9.0,SHOWING,data/assets/posters/infinity.jpg");
 		movies.add("003,Inside Out 2,Animation,96,7.9,SHOWING,data/assets/posters/insideout2.jpg");
 		movies.add("004,Interstellar,Sci-Fi,169,8.7,SHOWING,data/assets/posters/interstellar.jpg");
 		movies.add("005,Deadpool & Wolverine,Action,127,8.1,SHOWING,data/assets/posters/deadpool.jpg");
