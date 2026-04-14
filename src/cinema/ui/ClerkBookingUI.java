@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author ivana
+ * @author Ian
  */
 public class ClerkBookingUI extends javax.swing.JFrame {
     

@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author ivana
+ * @author Isaac
  */
 public class CustomerBookingUI extends javax.swing.JFrame {
     
