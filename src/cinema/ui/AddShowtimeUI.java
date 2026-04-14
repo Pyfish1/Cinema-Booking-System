@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author ivana
+ * @author Ian
  */
 public class AddShowtimeUI extends javax.swing.JFrame {
     

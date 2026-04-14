@@ -1,3 +1,4 @@
-001,Ivan,ivanho@mail.com,admin,MANAGER
-002,Ian,charlieclerk@mail.com,clerk,CLERK
-003,Isaac,tanjiro@mail.com,customer,CUSTOMER
+001,Ivan,ivanho1308@gmail.com,admin,MANAGER
+002,Ian,charlieclerk@gmail.com,clerk,CLERK
+003,Isaac,tanjiro@gmail.com,customer,CUSTOMER
+004,Isan,yo,yo,CUSTOMER

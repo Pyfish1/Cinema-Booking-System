@@ -1,5 +1,5 @@
-001,Dune: Part Two,Sci-Fi,166,8.8,SHOWING,data/assets/posters/dune2.jpg
-002,The Dark Knight,Action,152,9.0,SHOWING,data/assets/posters/tdk.jpg
+001,Demon Slayer : Mugen Train,Animation,178,10.0,SHOWING,data/assets/posters/mugen.jpg
+002,Demon Slayer : Infinity Castle,Animation,152,9.0,SHOWING,data/assets/posters/infinity.jpg
 003,Inside Out 2,Animation,96,7.9,SHOWING,data/assets/posters/insideout2.jpg
 004,Interstellar,Sci-Fi,169,8.7,SHOWING,data/assets/posters/interstellar.jpg
 005,Deadpool & Wolverine,Action,127,8.1,SHOWING,data/assets/posters/deadpool.jpg

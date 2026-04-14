@@ -34,7 +34,7 @@ import javax.swing.JTextField;
 
 /**
  *
- * @author Ivan
+ * @author Isaac
  */
 public class CustomerUI extends javax.swing.JFrame {
 	// this the gallery page where user can search for films
